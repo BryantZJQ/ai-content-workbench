@@ -101,10 +101,10 @@ st.markdown("""
         color: #1e293b;
     }
     .stTabs [aria-selected="true"] {
-        background: transparent !important;
-        color: #0c4a6e !important;
-        font-weight: 600 !important;
-        border-bottom: 2px solid #0ea5e9 !important;
+        background: rgba(14,165,233,0.08) !important;
+        color: #0ea5e9 !important;
+        font-weight: 700 !important;
+        border-bottom: 3px solid #0ea5e9 !important;
         box-shadow: none;
     }
     /* 一键出片 Tab 高亮（第5个） */
