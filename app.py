@@ -2,6 +2,7 @@
 
 import os
 import json
+import base64
 import streamlit as st
 
 # 页面必须在最前面设置
@@ -119,10 +120,13 @@ with st.sidebar:
     # === 卡密验证 ===
     st.markdown("### 🔑 卡密")
 
-    # 从URL参数恢复卡密（刷新后不丢失）
+    # 从URL参数恢复卡密（刷新后不丢失，加密存储）
     _params = st.query_params
-    if "key" in _params and not st.session_state.get("card_key"):
-        st.session_state["card_key"] = _params["key"]
+    if "t" in _params and not st.session_state.get("card_key"):
+        try:
+            st.session_state["card_key"] = base64.b64decode(_params["t"]).decode()
+        except Exception:
+            pass
 
     _saved_key = st.session_state.get("card_key", "")
     input_card_key = st.text_input(
@@ -136,7 +140,7 @@ with st.sidebar:
 
     if activate_btn and input_card_key:
         st.session_state["card_key"] = input_card_key
-        st.query_params["key"] = input_card_key
+        st.query_params["t"] = base64.b64encode(input_card_key.encode()).decode()
     elif activate_btn and not input_card_key:
         st.warning("请先输入卡密")
 
