@@ -699,9 +699,12 @@ border:1px solid rgba(52,211,153,0.2);font-size:0.9rem;">
 """, unsafe_allow_html=True)
 
 # ============================================================
-# 管理员模式（URL加 ?mode=admin 进入，普通用户不可见）
+# 管理员模式（URL加 ?ak=<密钥> 进入，密钥存储在Secrets中）
 # ============================================================
-_is_admin = st.query_params.get("mode") == "admin"
+_admin_key_cfg = ""
+if hasattr(st, "secrets"):
+    _admin_key_cfg = st.secrets.get("ADMIN_KEY", "")
+_is_admin = bool(_admin_key_cfg and st.query_params.get("ak") == _admin_key_cfg)
 
 # ============================================================
 # 主体 Tabs
