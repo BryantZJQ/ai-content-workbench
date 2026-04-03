@@ -225,7 +225,7 @@ def diagnose_script(script_text: str, platform: str = "通用",
     }},
     "platform_fit": {{
       "score": 7,
-      "comment": "平台适配度（是否符合{platform}的内容调性和时长要求）"
+      "comment": "平台适配度（是否符合{platform}的算法偏好、内容调性和时长要求。抖音看完播率和前3秒钩子；B站看深度和弹幕互动；小红书看收藏率和种草感）"
     }}
   }},
   "completion_rate": {{
@@ -258,3 +258,72 @@ def diagnose_script(script_text: str, platform: str = "通用",
         return {"error": "诊断失败，请检查输入的脚本内容", "raw": raw}
 
     return result
+
+
+# ============================================================
+# 4. 诊断→一键重写
+# ============================================================
+
+def rewrite_script(original_script: str, diagnosis: dict,
+                   platform: str = "通用") -> str:
+    """
+    根据诊断结果智能重写脚本：只修弱项，保留优点。
+
+    Args:
+        original_script: 原始脚本文本
+        diagnosis: diagnose_script() 返回的诊断结果
+        platform: 目标平台
+
+    Returns:
+        str: 重写后的完整脚本
+    """
+    # 提取诊断中的关键问题
+    weak_points = []
+    if diagnosis.get("scores"):
+        for key, item in diagnosis["scores"].items():
+            if isinstance(item, dict) and item.get("score", 10) < 7:
+                weak_points.append(f"- {item.get('comment', '')}")
+
+    suggestions_text = []
+    if diagnosis.get("suggestions"):
+        for sg in diagnosis["suggestions"]:
+            if sg.get("problem"):
+                suggestions_text.append(
+                    f"- 问题：{sg['problem']}  建议改为：{sg.get('improved', '')}"
+                )
+
+    dropoff_text = []
+    if diagnosis.get("completion_rate", {}).get("dropoff_points"):
+        for dp in diagnosis["completion_rate"]["dropoff_points"]:
+            dropoff_text.append(
+                f"- {dp.get('position', '')}：{dp.get('reason', '')}→{dp.get('suggestion', '')}"
+            )
+
+    system_prompt = f"""你是一位顶级短视频文案优化师。
+你的任务是根据诊断报告重写脚本，只修复弱项，保留原文的优点和风格。
+目标平台：{platform}
+重写原则：
+1. 保留原文的核心观点和信息
+2. 保留评分高的部分（钩子强度高就保留钩子结构）
+3. 只重写被诊断为弱项的部分
+4. 保持原文的人称和语气
+5. 只输出重写后的完整脚本正文，不要输出任何标记或说明"""
+
+    user_prompt = f"""【原始脚本】
+{original_script}
+
+【诊断发现的弱项】
+{chr(10).join(weak_points) if weak_points else "无明显弱项"}
+
+【具体优化建议】
+{chr(10).join(suggestions_text) if suggestions_text else "无"}
+
+【流失点】
+{chr(10).join(dropoff_text) if dropoff_text else "无"}
+
+【总评】{diagnosis.get('overall_verdict', '')}
+【总分】{diagnosis.get('overall_score', 0)}/10
+
+请根据以上诊断结果重写脚本。保留优点，只修复弱项。输出完整脚本正文："""
+
+    return chat(system_prompt, user_prompt, max_tokens=3000)

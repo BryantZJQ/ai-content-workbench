@@ -828,6 +828,12 @@ with tab3:
             use_container_width=True,
         )
 
+        # 跨Tab联动：一键跳转诊断
+        if st.button("🔍 立即诊断这个脚本", use_container_width=True, key="script_to_diag"):
+            st.session_state["_diag_original_script"] = _script_text
+            st.session_state["_diag_platform"] = result.get("platform", "通用")
+            st.info("💡 请切换到「📊 脚本诊断」Tab，脚本已自动填入")
+
 
 # ===== Tab4: 分镜生成 =====
 with tab4:
@@ -1089,14 +1095,21 @@ with tab5:
                 st.warning(s["cta"])
 
             st.code(s.get("full_script", ""), language=None)
-            st.download_button(
-                "⬇️ 下载脚本",
-                data=s.get("full_script", ""),
-                file_name=f"{s.get('title', '脚本')}.txt",
-                mime="text/plain",
-                use_container_width=True,
-                key="op_dl_script",
-            )
+            _op_dl_col, _op_diag_col = st.columns(2)
+            with _op_dl_col:
+                st.download_button(
+                    "⬇️ 下载脚本",
+                    data=s.get("full_script", ""),
+                    file_name=f"{s.get('title', '脚本')}.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                    key="op_dl_script",
+                )
+            with _op_diag_col:
+                if st.button("🔍 诊断这个脚本", use_container_width=True, key="op_to_diag"):
+                    st.session_state["_diag_original_script"] = s.get("full_script", "")
+                    st.session_state["_diag_platform"] = s.get("platform", "通用")
+                    st.info("💡 请切换到「📊 脚本诊断」Tab")
 
         # 分镜结果
         if opr.get("cues"):
@@ -1496,9 +1509,15 @@ with tab8:
     st.markdown("### 📊 脚本质量诊断")
     st.caption("粘贴任意脚本，AI给出完播率预测、节奏分析、互动潜力评估和具体优化建议")
 
+    # 从其他Tab联动过来的脚本自动填入
+    _prefill_script = st.session_state.get("_diag_original_script", "")
+    if _prefill_script:
+        st.success("✅ 已自动填入从脚本生成/一键出片传来的脚本")
+
     with st.form("diagnose_form"):
         diag_script = st.text_area(
             "📋 粘贴脚本内容",
+            value=_prefill_script,
             height=250,
             placeholder="粘贴你写的或AI生成的短视频脚本...",
             key="diag_script",
@@ -1517,6 +1536,8 @@ with tab8:
             st.error("请粘贴至少30字的脚本内容")
         else:
             diag_result = None
+            st.session_state["_diag_original_script"] = diag_script
+            st.session_state["_diag_platform"] = diag_platform
             with st.status("AI正在诊断脚本质量...", expanded=True) as d_status:
                 try:
                     st.write("📐 分析脚本结构...")
@@ -1627,3 +1648,42 @@ with tab8:
                     if sg.get("improved"):
                         st.markdown(f"**优化后：**")
                         st.success(sg["improved"])
+
+        # ========== 一键重写 ==========
+        st.markdown("---")
+        _original_script = st.session_state.get("_diag_original_script", "")
+        _diag_platform = st.session_state.get("_diag_platform", "通用")
+        if _original_script and d.get("overall_score", 10) < 9:
+            if st.button("🔧 一键优化脚本（AI根据诊断结果重写）", type="primary", use_container_width=True, key="rewrite_btn"):
+                if not _premium_gate("一键重写"):
+                    pass
+                else:
+                    with st.spinner("AI正在根据诊断结果重写脚本..."):
+                        try:
+                            rewritten = content_analyzer.rewrite_script(
+                                _original_script, d, _diag_platform
+                            )
+                            st.session_state["rewritten_script"] = rewritten
+                        except Exception as e:
+                            st.error(f"重写失败: {e}")
+                    if st.session_state.get("rewritten_script"):
+                        key_manager.consume_usage(st.session_state.get("card_key", ""))
+
+            if "rewritten_script" in st.session_state and st.session_state["rewritten_script"]:
+                st.markdown("#### ✨ 优化后的脚本")
+                _rw_col1, _rw_col2 = st.columns(2)
+                with _rw_col1:
+                    st.markdown("**📄 原始脚本**")
+                    st.text_area("原始", _original_script, height=300, disabled=True, key="_rw_orig", label_visibility="collapsed")
+                with _rw_col2:
+                    st.markdown("**✨ 优化后脚本**")
+                    st.text_area("优化后", st.session_state["rewritten_script"], height=300, disabled=True, key="_rw_new", label_visibility="collapsed")
+
+                st.download_button(
+                    "⬇️ 下载优化后脚本",
+                    data=st.session_state["rewritten_script"],
+                    file_name="优化后脚本.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                    key="dl_rewritten",
+                )
