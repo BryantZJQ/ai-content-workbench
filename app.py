@@ -612,15 +612,44 @@ with st.sidebar:
 
     st.divider()
 
-    # === API Key（纯后台自动读取，用户不可见）===
-    _api_key = os.environ.get("DEEPSEEK_API_KEY", "")
-    try:
-        if hasattr(st, "secrets") and "DEEPSEEK_API_KEY" in st.secrets:
-            _api_key = st.secrets["DEEPSEEK_API_KEY"]
-    except Exception:
-        pass
-    if _api_key:
-        os.environ["DEEPSEEK_API_KEY"] = _api_key
+    # === 模型API Key（从Secrets自动读取所有provider）===
+    from llm_client import MODEL_PROVIDERS as _MP
+    _available_providers = []
+    for _pid, _pcfg in _MP.items():
+        _sk = _pcfg["secret_key"]
+        _kv = os.environ.get(_sk, "")
+        try:
+            if hasattr(st, "secrets") and _sk in st.secrets:
+                _kv = st.secrets[_sk]
+        except Exception:
+            pass
+        if _kv:
+            os.environ[_sk] = _kv
+            _available_providers.append(_pid)
+
+    # 兼容旧配置
+    if "deepseek" in _available_providers and "DEEPSEEK_API_KEY" not in os.environ:
+        os.environ["DEEPSEEK_API_KEY"] = os.environ.get(_MP["deepseek"]["secret_key"], "")
+
+    # === 模型选择 ===
+    if len(_available_providers) > 1:
+        st.markdown("### AI 模型")
+        _provider_labels = {p: f"{_MP[p]['name']}" for p in _available_providers}
+        _default_idx = _available_providers.index(st.session_state.get("llm_provider", _available_providers[0])) if st.session_state.get("llm_provider") in _available_providers else 0
+        _sel_provider = st.selectbox(
+            "选择模型",
+            _available_providers,
+            index=_default_idx,
+            format_func=lambda p: _provider_labels[p],
+            key="llm_provider_select",
+            help="切换不同的AI模型，效果和速度各有差异",
+        )
+        st.session_state["llm_provider"] = _sel_provider
+        os.environ["LLM_PROVIDER"] = _sel_provider
+        st.caption(f"{_MP[_sel_provider]['note']}")
+        st.divider()
+    elif _available_providers:
+        os.environ["LLM_PROVIDER"] = _available_providers[0]
 
     st.markdown("### 功能导航")
     st.markdown("""

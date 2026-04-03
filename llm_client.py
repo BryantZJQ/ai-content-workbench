@@ -1,4 +1,4 @@
-"""LLM客户端 — 封装DeepSeek/OpenAI兼容API调用"""
+"""LLM客户端 — 封装多模型API调用（DeepSeek/Kimi/通义千问/智谱GLM）"""
 
 import os
 import json
@@ -8,16 +8,60 @@ import functools
 from openai import OpenAI
 
 
+# 支持的模型提供商配置
+MODEL_PROVIDERS = {
+    "deepseek": {
+        "name": "DeepSeek",
+        "base_url": "https://api.deepseek.com/v1",
+        "model": "deepseek-chat",
+        "secret_key": "DEEPSEEK_API_KEY",
+        "free": False,
+        "note": "性价比高，中文能力强",
+    },
+    "kimi": {
+        "name": "Kimi (月之暗面)",
+        "base_url": "https://api.moonshot.cn/v1",
+        "model": "moonshot-v1-8k",
+        "secret_key": "KIMI_API_KEY",
+        "free": True,
+        "note": "免费额度，长文本理解强",
+    },
+    "qwen": {
+        "name": "通义千问 (阿里)",
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "model": "qwen-turbo",
+        "secret_key": "QWEN_API_KEY",
+        "free": True,
+        "note": "免费额度，阿里出品",
+    },
+    "glm": {
+        "name": "智谱GLM (清华)",
+        "base_url": "https://open.bigmodel.cn/api/paas/v4",
+        "model": "glm-4-flash",
+        "secret_key": "GLM_API_KEY",
+        "free": True,
+        "note": "GLM-4-Flash免费，速度快",
+    },
+}
+
+
 def _get_client() -> tuple[OpenAI, str]:
     """获取OpenAI兼容客户端和模型名"""
-    api_key = os.environ.get("DEEPSEEK_API_KEY", "")
-    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1")
-    model = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+    provider_id = os.environ.get("LLM_PROVIDER", "deepseek")
+    provider = MODEL_PROVIDERS.get(provider_id, MODEL_PROVIDERS["deepseek"])
+
+    api_key = os.environ.get(provider["secret_key"], "")
+    base_url = os.environ.get("LLM_BASE_URL", provider["base_url"])
+    model = os.environ.get("LLM_MODEL", provider["model"])
+
+    # 兼容旧的 DEEPSEEK_API_KEY 环境变量
+    if not api_key and provider_id == "deepseek":
+        api_key = os.environ.get("DEEPSEEK_API_KEY", "")
 
     if not api_key:
         raise ValueError(
-            "未设置 DEEPSEEK_API_KEY 环境变量。"
-            "请在环境变量或 Claude Desktop 配置中设置。"
+            f"未设置 {provider['secret_key']} 。"
+            f"请在 Streamlit Secrets 或环境变量中配置。"
         )
 
     client = OpenAI(api_key=api_key, base_url=base_url)
