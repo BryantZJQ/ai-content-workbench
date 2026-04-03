@@ -621,23 +621,33 @@ with tab5:
         elif not op_track and not op_seeds:
             st.error("请至少输入赛道或种子关键词")
         else:
-            op_seed_list = [k.strip() for k in op_seeds.split(",") if k.strip()] if op_seeds else None
+            op_seed_list = [k.strip() for k in op_seeds.split(",") if k.strip()] if op_seeds else []
+            # 赛道本身也作为种子词，确保生成内容与赛道相关
+            if op_track and op_track not in op_seed_list:
+                op_seed_list.insert(0, op_track)
             op_result = {}
 
             with st.status("🚀 一键出片流水线启动...", expanded=True) as op_status:
                 try:
-                    # Step 1: 智能选题
+                    # Step 1: 智能选题（用户输入优先，热搜仅作补充）
                     st.write("**Step 1/3** — 📡 智能选题...")
                     all_topics = []
-                    hot = topic_engine.fetch_hot_topics()
-                    hot_titles = [h["title"] for h in hot if h["title"]]
-                    all_topics.extend(hot_titles)
-                    st.write(f"  获取 {len(hot_titles)} 条热搜")
 
+                    # 用户关键词优先：扩展更多候选
                     if op_seed_list:
-                        expanded = topic_engine.expand_topics(op_seed_list, count=20, track=op_track)
+                        st.write("  🧠 基于你的关键词AI联想扩展...")
+                        expanded = topic_engine.expand_topics(
+                            op_seed_list, count=25, track=op_track
+                        )
                         all_topics.extend(expanded)
-                        st.write(f"  AI扩展 {len(expanded)} 个候选")
+                        st.write(f"  ✅ 扩展出 {len(expanded)} 个相关选题")
+
+                    # 热搜作为补充（最多取10条，避免喧宾夺主）
+                    st.write("  📡 抓取热搜作为灵感补充...")
+                    hot = topic_engine.fetch_hot_topics()
+                    hot_titles = [h["title"] for h in hot if h["title"]][:10]
+                    all_topics.extend(hot_titles)
+                    st.write(f"  ✅ 补充 {len(hot_titles)} 条热搜")
 
                     unique = topic_engine.deduplicate(all_topics)
                     scored = topic_engine.score_topics(unique[:30], track=op_track)
