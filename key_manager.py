@@ -10,10 +10,11 @@ from pathlib import Path
 
 # 卡密类型配置
 KEY_PLANS = {
-    "trial": {"name": "体验卡", "days": 3, "daily_limit": 10, "price": "免费"},
-    "weekly": {"name": "周卡", "days": 7, "daily_limit": 50, "price": "¥9.9"},
-    "monthly": {"name": "月卡", "days": 30, "daily_limit": 200, "price": "¥29"},
-    "yearly": {"name": "年卡", "days": 365, "daily_limit": 999, "price": "¥199"},
+    "demo": {"name": "试用卡", "days": 999, "daily_limit": 999, "total_limit": 3, "price": "免费"},
+    "trial": {"name": "体验卡", "days": 3, "daily_limit": 10, "total_limit": 0, "price": "免费"},
+    "weekly": {"name": "周卡", "days": 7, "daily_limit": 50, "total_limit": 0, "price": "¥9.9"},
+    "monthly": {"name": "月卡", "days": 30, "daily_limit": 200, "total_limit": 0, "price": "¥29"},
+    "yearly": {"name": "年卡", "days": 365, "daily_limit": 999, "total_limit": 0, "price": "¥199"},
 }
 
 # 卡密数据文件路径
@@ -63,10 +64,12 @@ def generate_keys(plan: str, count: int = 1, prefix: str = "ACP") -> list[str]:
             "plan": plan,
             "plan_name": KEY_PLANS[plan]["name"],
             "daily_limit": KEY_PLANS[plan]["daily_limit"],
+            "total_limit": KEY_PLANS[plan]["total_limit"],
+            "total_used": 0,
             "created_at": datetime.now().isoformat(),
             "activated_at": None,
             "expires_at": None,
-            "status": "unused",  # unused / active / expired
+            "status": "unused",  # unused / active / expired / exhausted
             "usage_log": {},     # {"2026-04-03": 5}
         }
         generated.append(key_code)
@@ -127,6 +130,21 @@ def validate_key(key_code: str) -> dict:
                 "message": f"卡密已过期（{expires.strftime('%Y-%m-%d')}）",
             }
 
+    # 检查总次数限制（demo试用卡）
+    total_limit = key_info.get("total_limit", 0)
+    total_used = key_info.get("total_used", 0)
+    if total_limit > 0 and total_used >= total_limit:
+        key_info["status"] = "exhausted"
+        if key_code in _load_keys():
+            keys_data_local = _load_keys()
+            if key_code in keys_data_local:
+                keys_data_local[key_code]["status"] = "exhausted"
+                _save_keys(keys_data_local)
+        return {
+            "valid": False,
+            "message": f"试用次数已用完（共{total_limit}次），请购买正式卡密解锁无限使用",
+        }
+
     # 检查今日用量
     usage_today = key_info.get("usage_log", {}).get(today, 0)
     daily_limit = key_info.get("daily_limit", 0)
@@ -142,12 +160,22 @@ def validate_key(key_code: str) -> dict:
     if key_info.get("expires_at"):
         expires_str = datetime.fromisoformat(key_info["expires_at"]).strftime("%Y-%m-%d")
 
+    # 构建剩余次数信息
+    if total_limit > 0:
+        remaining_total = total_limit - total_used
+        remaining_info = f"剩余 {remaining_total}/{total_limit} 次"
+    else:
+        remaining_info = f"今日剩余 {remaining} 次"
+
     return {
         "valid": True,
         "message": "✅ 卡密有效",
         "plan_name": key_info.get("plan_name", ""),
         "remaining_today": remaining,
+        "remaining_info": remaining_info,
         "daily_limit": daily_limit,
+        "total_limit": total_limit,
+        "total_used": total_used,
         "expires_at": expires_str,
     }
 
@@ -164,6 +192,8 @@ def consume_usage(key_code: str, count: int = 1):
     keys_data[key_code]["usage_log"][today] = (
         keys_data[key_code]["usage_log"].get(today, 0) + count
     )
+    # 累加总使用次数
+    keys_data[key_code]["total_used"] = keys_data[key_code].get("total_used", 0) + count
     _save_keys(keys_data)
 
 

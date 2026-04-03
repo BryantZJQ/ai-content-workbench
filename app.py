@@ -133,7 +133,7 @@ with st.sidebar:
 
         v = st.session_state.get("key_validation", {})
         if v.get("valid"):
-            st.success(f"✅ {v.get('plan_name', '')} | 今日剩余 {v.get('remaining_today', 0)} 次")
+            st.success(f"✅ {v.get('plan_name', '')} | {v.get('remaining_info', '')}")
             if v.get("expires_at"):
                 st.caption(f"到期时间：{v['expires_at']}")
         else:
@@ -144,33 +144,15 @@ with st.sidebar:
 
     st.divider()
 
-    # === API Key（对用户隐藏，内置默认值）===
-    default_api_key = os.environ.get("DEEPSEEK_API_KEY", "")
-    # 尝试从 secrets 读取
+    # === API Key（纯后台自动读取，用户不可见）===
+    _api_key = os.environ.get("DEEPSEEK_API_KEY", "")
     try:
         if hasattr(st, "secrets") and "DEEPSEEK_API_KEY" in st.secrets:
-            default_api_key = st.secrets["DEEPSEEK_API_KEY"]
+            _api_key = st.secrets["DEEPSEEK_API_KEY"]
     except Exception:
         pass
-
-    with st.expander("⚙️ 高级设置", expanded=False):
-        input_key = st.text_input(
-            "DeepSeek API Key（可选，已内置）",
-            value=st.session_state.get("api_key", default_api_key),
-            type="password",
-            placeholder="留空则使用内置Key",
-        )
-        if input_key:
-            st.session_state["api_key"] = input_key
-            os.environ["DEEPSEEK_API_KEY"] = input_key
-
-    # 确保环境变量有值
-    if not os.environ.get("DEEPSEEK_API_KEY") and default_api_key:
-        os.environ["DEEPSEEK_API_KEY"] = default_api_key
-    if st.session_state.get("api_key") and not os.environ.get("DEEPSEEK_API_KEY"):
-        os.environ["DEEPSEEK_API_KEY"] = st.session_state["api_key"]
-
-    st.divider()
+    if _api_key:
+        os.environ["DEEPSEEK_API_KEY"] = _api_key
 
     st.markdown("### 📊 功能说明")
     st.markdown("""
