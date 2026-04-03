@@ -435,6 +435,20 @@ def _premium_gate(feature_name: str) -> bool:
     return False
 
 
+_SITE_URL = "https://ai-content-workbench-6ivhtqpkcsnphcvjpru5hx.streamlit.app"
+
+
+def _render_share_banner(feature_name: str):
+    """在结果区底部渲染分享引导"""
+    share_text = f"推荐一个AI短视频工具，{feature_name}功能很好用，输入关键词就能自动生成脚本和分镜。免费体验：{_SITE_URL}"
+    st.markdown(f"""
+<div style="margin-top:1.5rem;padding:1rem 1.2rem;background:linear-gradient(135deg,rgba(14,165,233,0.04),rgba(56,189,248,0.06));
+border:1px solid rgba(14,165,233,0.12);border-radius:12px;">
+<div style="font-size:0.88rem;color:#475569;margin-bottom:0.5rem;">觉得好用？分享给做短视频的朋友</div>
+</div>""", unsafe_allow_html=True)
+    st.code(share_text, language=None)
+
+
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center;padding:0.5rem 0 0.2rem 0;">
@@ -874,6 +888,8 @@ with tab3:
             st.session_state["_diag_platform"] = result.get("platform", "通用")
             st.info("请切换到「脚本诊断」Tab，脚本已自动填入")
 
+        _render_share_banner("脚本生成")
+
 
 # ===== Tab4: 分镜生成 =====
 with tab4:
@@ -1263,6 +1279,8 @@ with tab5:
 4. 生成后下载，用剪映/CapCut拼接所有镜头 + 配音即完成
         """)
 
+        _render_share_banner("一键出片")
+
 
 # ===== Tab6: 爆款拆解 =====
 with tab6:
@@ -1407,6 +1425,8 @@ with tab6:
             st.markdown("#### 改进建议")
             st.warning(a["improvement"])
 
+        _render_share_banner("爆款拆解")
+
 
 # ===== Tab7: 标题优化 =====
 with tab7:
@@ -1499,6 +1519,8 @@ with tab7:
                         )
                     st.divider()
 
+            _render_share_banner("标题优化")
+
     else:
         # 对比模式
         with st.form("title_compare_form"):
@@ -1552,6 +1574,8 @@ with tab7:
                             unsafe_allow_html=True,
                         )
                     st.divider()
+
+            _render_share_banner("标题优化")
 
 
 # ===== Tab8: 脚本诊断 =====
@@ -1737,3 +1761,5 @@ with tab8:
                     use_container_width=True,
                     key="dl_rewritten",
                 )
+
+        _render_share_banner("脚本诊断")
