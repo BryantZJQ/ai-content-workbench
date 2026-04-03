@@ -7,6 +7,8 @@ import string
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import cloud_db
+
 
 # 卡密类型配置
 KEY_PLANS = {
@@ -133,6 +135,12 @@ def validate_key(key_code: str) -> dict:
     # 检查总次数限制（demo试用卡）
     total_limit = key_info.get("total_limit", 0)
     total_used = key_info.get("total_used", 0)
+
+    # 云端优先从数据库读取真实用量
+    if cloud_db.is_available():
+        cloud_record = cloud_db.get_usage(key_code)
+        if cloud_record:
+            total_used = cloud_record.get("total_used", 0)
     if total_limit > 0 and total_used >= total_limit:
         key_info["status"] = "exhausted"
         if key_code in _load_keys():
@@ -182,19 +190,21 @@ def validate_key(key_code: str) -> dict:
 
 def consume_usage(key_code: str, count: int = 1):
     """消耗一次使用额度"""
+    # 本地记录
     keys_data = _load_keys()
-    if key_code not in keys_data:
-        return
+    if key_code in keys_data:
+        today = datetime.now().strftime("%Y-%m-%d")
+        if "usage_log" not in keys_data[key_code]:
+            keys_data[key_code]["usage_log"] = {}
+        keys_data[key_code]["usage_log"][today] = (
+            keys_data[key_code]["usage_log"].get(today, 0) + count
+        )
+        keys_data[key_code]["total_used"] = keys_data[key_code].get("total_used", 0) + count
+        _save_keys(keys_data)
 
-    today = datetime.now().strftime("%Y-%m-%d")
-    if "usage_log" not in keys_data[key_code]:
-        keys_data[key_code]["usage_log"] = {}
-    keys_data[key_code]["usage_log"][today] = (
-        keys_data[key_code]["usage_log"].get(today, 0) + count
-    )
-    # 累加总使用次数
-    keys_data[key_code]["total_used"] = keys_data[key_code].get("total_used", 0) + count
-    _save_keys(keys_data)
+    # 云端同步
+    if cloud_db.is_available():
+        cloud_db.consume(key_code, count)
 
 
 def _load_cloud_keys() -> dict:
