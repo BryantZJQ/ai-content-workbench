@@ -42,10 +42,23 @@ st.markdown("""
         -moz-osx-font-smoothing: grayscale;
     }
     /* 继承字体到子元素，但排除图标字体 */
-    .stApp p, .stApp span, .stApp div, .stApp label, .stApp input, .stApp textarea,
+    .stApp p, .stApp div, .stApp label, .stApp input, .stApp textarea,
     .stApp button, .stApp select, .stApp h1, .stApp h2, .stApp h3, .stApp h4,
     .stApp li, .stApp td, .stApp th, .stApp a, .stApp code, .stApp pre {
         font-family: inherit !important;
+    }
+    .stApp span {
+        font-family: inherit;
+    }
+    /* 恢复 Streamlit 内部图标字体 */
+    .stApp [data-testid] span[class*="Icon"],
+    .stApp .material-symbols-rounded,
+    .stApp .material-symbols-outlined,
+    .stApp .material-icons,
+    .stApp [class*="material-symbols"],
+    .stApp [class*="icon"] > span,
+    .stApp [data-baseweb] span[aria-hidden="true"] {
+        font-family: 'Material Symbols Rounded', 'Material Symbols Outlined', 'Material Icons', sans-serif !important;
     }
 
     /* ========== 主标题区 ========== */
