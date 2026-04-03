@@ -129,6 +129,7 @@ with st.sidebar:
         "输入卡密",
         value=_saved_key,
         placeholder="ACP-XXXX-XXXX-XXXX",
+        type="password",
         help="输入卡密解锁全部功能",
     )
     activate_btn = st.button("🔓 激活卡密", type="primary", use_container_width=True)
