@@ -299,19 +299,20 @@ with tab2:
     st.markdown("### 智能选题推荐")
     st.caption("热搜 + AI联想扩展 + 智能打分排序，帮你找到最有潜力的选题")
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        track = st.text_input("📌 内容赛道", placeholder="如：历史、科技、美食、育儿", key="topic_track")
-    with col2:
-        seeds = st.text_input("🌱 种子关键词（可选）", placeholder="逗号分隔，如：朱元璋,明朝", key="topic_seeds")
-    with col3:
-        topic_count = st.slider("📊 推荐数量", 5, 30, 10, key="topic_count")
+    with st.form("topic_form"):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            track = st.text_input("📌 内容赛道", placeholder="如：历史、科技、美食、育儿", key="topic_track")
+        with col2:
+            seeds = st.text_input("🌱 种子关键词（可选）", placeholder="逗号分隔，如：朱元璋,明朝", key="topic_seeds")
+        with col3:
+            topic_count = st.slider("📊 推荐数量", 5, 30, 10, key="topic_count")
 
-    col_a, col_b = st.columns([1, 1])
-    with col_a:
-        use_hot = st.checkbox("结合实时热搜", value=True, key="topic_use_hot")
-    with col_b:
-        topic_btn = st.button("🎯 开始选题", type="primary", use_container_width=True)
+        col_a, col_b = st.columns([1, 1])
+        with col_a:
+            use_hot = st.checkbox("结合实时热搜", value=True, key="topic_use_hot")
+        with col_b:
+            topic_btn = st.form_submit_button("🎯 开始选题", type="primary", use_container_width=True)
 
     if topic_btn:
         if not _premium_gate("智能选题"):
@@ -396,13 +397,7 @@ with tab3:
     st.markdown("### 短视频脚本生成")
     st.caption("输入选题，AI自动生成完整的短视频配音脚本，支持12种风格和4个平台")
 
-    script_topic = st.text_input(
-        "📌 输入选题",
-        placeholder="如：为什么故宫屋顶没有鸟粪",
-        key="script_topic",
-    )
-
-    # 如果有智能选题结果，提供快捷选择
+    # 如果有智能选题结果，提供快捷选择（放在form外面，因为含st.button）
     if "scored_topics" in st.session_state and st.session_state["scored_topics"]:
         with st.expander("💡 从智能选题结果中选择"):
             topic_names = [item.get("topic", "") for item in st.session_state["scored_topics"]]
@@ -411,24 +406,31 @@ with tab3:
                 st.session_state["script_topic"] = selected
                 st.rerun()
 
-    col_a, col_b, col_c = st.columns(3)
-    with col_a:
-        style_options = [s["name"] for s in script_gen.list_styles()]
-        style_descriptions = {s["name"]: s["description"] for s in script_gen.list_styles()}
-        script_style = st.selectbox(
-            "🎨 脚本风格",
-            style_options,
-            index=0,
-            help="\n".join([f"• {k}: {v}" for k, v in style_descriptions.items()]),
-            key="script_style",
+    with st.form("script_form"):
+        script_topic = st.text_input(
+            "📌 输入选题",
+            placeholder="如：为什么故宫屋顶没有鸟粪",
+            key="script_topic",
         )
-    with col_b:
-        platform_options = [p["name"] for p in script_gen.list_platforms()]
-        script_platform = st.selectbox("📱 目标平台", platform_options, index=0, key="script_platform")
-    with col_c:
-        script_duration = st.slider("⏱️ 目标时长（秒）", 15, 300, 60, step=15, key="script_duration")
 
-    script_btn = st.button("� 生成脚本", type="primary", use_container_width=True)
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            style_options = [s["name"] for s in script_gen.list_styles()]
+            style_descriptions = {s["name"]: s["description"] for s in script_gen.list_styles()}
+            script_style = st.selectbox(
+                "🎨 脚本风格",
+                style_options,
+                index=0,
+                help="\n".join([f"• {k}: {v}" for k, v in style_descriptions.items()]),
+                key="script_style",
+            )
+        with col_b:
+            platform_options = [p["name"] for p in script_gen.list_platforms()]
+            script_platform = st.selectbox("📱 目标平台", platform_options, index=0, key="script_platform")
+        with col_c:
+            script_duration = st.slider("⏱️ 目标时长（秒）", 15, 300, 60, step=15, key="script_duration")
+
+        script_btn = st.form_submit_button("📝 生成脚本", type="primary", use_container_width=True)
 
     if script_btn:
         if not _premium_gate("脚本生成"):
@@ -597,23 +599,24 @@ with tab5:
     st.markdown("### 🚀 一键出片")
     st.caption("输入赛道和关键词，AI自动完成 选题→脚本→分镜 全流程，一步到位")
 
-    op_col1, op_col2 = st.columns(2)
-    with op_col1:
-        op_track = st.text_input("📌 内容赛道", placeholder="如：历史、科技、美食", key="op_track")
-    with op_col2:
-        op_seeds = st.text_input("🌱 种子关键词", placeholder="逗号分隔，如：朱元璋,明朝", key="op_seeds")
+    with st.form("oneclick_form"):
+        op_col1, op_col2 = st.columns(2)
+        with op_col1:
+            op_track = st.text_input("📌 内容赛道", placeholder="如：历史、科技、美食", key="op_track")
+        with op_col2:
+            op_seeds = st.text_input("🌱 种子关键词", placeholder="逗号分隔，如：朱元璋,明朝", key="op_seeds")
 
-    op_col_a, op_col_b, op_col_c = st.columns(3)
-    with op_col_a:
-        op_style_options = [s["name"] for s in script_gen.list_styles()]
-        op_style = st.selectbox("🎨 脚本风格", op_style_options, index=0, key="op_style")
-    with op_col_b:
-        op_platform_options = [p["name"] for p in script_gen.list_platforms()]
-        op_platform = st.selectbox("📱 目标平台", op_platform_options, index=0, key="op_platform")
-    with op_col_c:
-        op_duration = st.slider("⏱️ 目标时长（秒）", 15, 300, 60, step=15, key="op_duration")
+        op_col_a, op_col_b, op_col_c = st.columns(3)
+        with op_col_a:
+            op_style_options = [s["name"] for s in script_gen.list_styles()]
+            op_style = st.selectbox("🎨 脚本风格", op_style_options, index=0, key="op_style")
+        with op_col_b:
+            op_platform_options = [p["name"] for p in script_gen.list_platforms()]
+            op_platform = st.selectbox("📱 目标平台", op_platform_options, index=0, key="op_platform")
+        with op_col_c:
+            op_duration = st.slider("⏱️ 目标时长（秒）", 15, 300, 60, step=15, key="op_duration")
 
-    op_btn = st.button("🚀 一键生成全部", type="primary", use_container_width=True)
+        op_btn = st.form_submit_button("🚀 一键生成全部", type="primary", use_container_width=True)
 
     if op_btn:
         if not _premium_gate("一键出片"):
