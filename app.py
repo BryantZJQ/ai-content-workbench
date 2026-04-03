@@ -1906,8 +1906,9 @@ if _is_admin:
 
                 # 真实用量（云端优先）
                 _total_used = _cloud_rec.get("total_used", _ki.get("total_used", 0))
-                _total_limit = _ki.get("total_limit", key_manager.KEY_PLANS.get(_plan, {}).get("total_limit", 0))
-                _daily_limit = _ki.get("daily_limit", key_manager.KEY_PLANS.get(_plan, {}).get("daily_limit", 0))
+                _plan_cfg = key_manager.KEY_PLANS.get(_plan, {})
+                _total_limit = _ki.get("total_limit", _plan_cfg.get("total_limit", 0))
+                _daily_limit = _ki.get("daily_limit", _plan_cfg.get("daily_limit", 0))
 
                 # 过期时间
                 _exp_str = _ki.get("expires_at")
@@ -1937,7 +1938,7 @@ if _is_admin:
                 if _total_limit > 0:
                     _remaining_uses = f"{max(0, _total_limit - _total_used)}/{_total_limit}"
                 else:
-                    _remaining_uses = f"{_daily_limit}/天"
+                    _remaining_uses = f"已用{_total_used}次 | {_daily_limit}/天"
 
                 # 激活时间
                 _act_str = _ki.get("activated_at")
