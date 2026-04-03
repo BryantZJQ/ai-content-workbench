@@ -229,7 +229,8 @@ st.markdown("""
 
     /* ========== 侧边栏 ========== */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+        background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 40%, #f1f5f9 100%) !important;
+        border-right: 1px solid #e2e8f0 !important;
     }
     section[data-testid="stSidebar"] .stMarkdown,
     section[data-testid="stSidebar"] .stMarkdown p,
@@ -237,45 +238,46 @@ st.markdown("""
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] .stMarkdown h2,
     section[data-testid="stSidebar"] .stMarkdown h3 {
-        color: #e2e8f0 !important;
+        color: #334155 !important;
     }
     section[data-testid="stSidebar"] .stMarkdown strong {
-        color: #f8fafc !important;
+        color: #1e293b !important;
     }
     section[data-testid="stSidebar"] .stDivider {
-        border-color: rgba(255,255,255,0.08) !important;
+        border-color: #cbd5e1 !important;
     }
     section[data-testid="stSidebar"] .stTextInput > div > div > input {
-        background: rgba(255,255,255,0.06) !important;
-        border: 1.5px solid rgba(255,255,255,0.12) !important;
-        color: #f8fafc !important;
+        background: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        color: #1e293b !important;
         border-radius: 4px !important;
     }
     section[data-testid="stSidebar"] .stTextInput > div > div > input:focus {
-        border-color: #38bdf8 !important;
-        box-shadow: none !important;
+        border-color: #0ea5e9 !important;
+        box-shadow: 0 0 0 2px rgba(14,165,233,0.1) !important;
     }
     section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
-        background: #38bdf8 !important;
+        background: #0ea5e9 !important;
+        color: #ffffff !important;
         box-shadow: none !important;
     }
     section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]) {
-        border-color: rgba(255,255,255,0.15) !important;
-        color: #e2e8f0 !important;
-        background: transparent !important;
+        border-color: #cbd5e1 !important;
+        color: #475569 !important;
+        background: #ffffff !important;
     }
     section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]):hover {
-        border-color: #38bdf8 !important;
-        color: #38bdf8 !important;
-        background: rgba(56,189,248,0.08) !important;
+        border-color: #0ea5e9 !important;
+        color: #0ea5e9 !important;
+        background: #f0f9ff !important;
     }
     section[data-testid="stSidebar"] .stAlert {
-        background: rgba(255,255,255,0.05) !important;
-        color: #e2e8f0 !important;
-        border: 1px solid rgba(255,255,255,0.08) !important;
+        background: #ffffff !important;
+        color: #334155 !important;
+        border: 1px solid #e2e8f0 !important;
     }
     section[data-testid="stSidebar"] div[data-testid="stNotification"] p {
-        color: #e2e8f0 !important;
+        color: #334155 !important;
     }
 
     /* ========== 分割线 ========== */
@@ -426,9 +428,9 @@ def _premium_gate(feature_name: str) -> bool:
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center;padding:0.5rem 0 0.2rem 0;">
-        <span style="font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#38bdf8,#7dd3fc);
+        <span style="font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#0369a1,#0ea5e9);
         -webkit-background-clip:text;-webkit-text-fill-color:transparent;">AI 工作台</span>
-        <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;letter-spacing:0.1em;">SHORT VIDEO CONTENT STUDIO</div>
+        <div style="font-size:0.75rem;color:#64748b;margin-top:2px;letter-spacing:0.1em;">SHORT VIDEO CONTENT STUDIO</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -524,13 +526,13 @@ with st.sidebar:
     st.markdown("""
     <div style="font-size:0.85rem;line-height:2;">
     <span style="color:#34d399;">●</span> <b>热搜榜单</b> <span style="background:rgba(52,211,153,0.15);color:#34d399;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">免费</span><br>
-    <span style="color:#38bdf8;">●</span> <b>智能选题</b><br>
-    <span style="color:#38bdf8;">●</span> <b>脚本生成</b> <span style="color:#64748b;font-size:0.75rem;">12种风格</span><br>
-    <span style="color:#38bdf8;">●</span> <b>分镜提示词</b><br>
-    <span style="color:#38bdf8;">●</span> <b>一键出片</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">推荐</span><br>
-    <span style="color:#38bdf8;">●</span> <b>爆款拆解</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span><br>
-    <span style="color:#38bdf8;">●</span> <b>标题优化</b><br>
-    <span style="color:#38bdf8;">●</span> <b>脚本诊断</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span>
+    <span style="color:#0ea5e9;">●</span> <b>智能选题</b><br>
+    <span style="color:#0ea5e9;">●</span> <b>脚本生成</b> <span style="color:#64748b;font-size:0.75rem;">12种风格</span><br>
+    <span style="color:#0ea5e9;">●</span> <b>分镜提示词</b><br>
+    <span style="color:#0ea5e9;">●</span> <b>一键出片</b> <span style="background:rgba(251,191,36,0.15);color:#d97706;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">推荐</span><br>
+    <span style="color:#0ea5e9;">●</span> <b>爆款拆解</b> <span style="background:rgba(251,191,36,0.15);color:#d97706;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span><br>
+    <span style="color:#0ea5e9;">●</span> <b>标题优化</b><br>
+    <span style="color:#0ea5e9;">●</span> <b>脚本诊断</b> <span style="background:rgba(251,191,36,0.15);color:#d97706;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -538,8 +540,8 @@ with st.sidebar:
 
     st.markdown("""
     <div style="text-align:center;padding:0.3rem 0;">
-        <div style="font-size:0.8rem;color:#94a3b8;">关注公众号回复「体验」</div>
-        <div style="font-size:0.8rem;color:#94a3b8;">获取免费试用卡密</div>
+        <div style="font-size:0.8rem;color:#64748b;">关注公众号回复「体验」</div>
+        <div style="font-size:0.8rem;color:#64748b;">获取免费试用卡密</div>
     </div>
     """, unsafe_allow_html=True)
 
