@@ -25,6 +25,7 @@ import topic_engine
 import script_gen
 import key_manager
 import cloud_db
+import llm_client
 import content_analyzer
 
 
@@ -1186,7 +1187,10 @@ with tab5:
                 op_seed_list.insert(0, op_track)
             op_result = {}
 
-            with st.status("一键出片流水线启动...", expanded=True) as op_status:
+            _cur_model = os.environ.get("LLM_PROVIDER", "deepseek")
+            _model_name = llm_client.MODEL_PROVIDERS.get(_cur_model, {}).get("name", _cur_model)
+
+            with st.status(f"一键出片流水线启动（{_model_name}）...", expanded=True) as op_status:
                 try:
                     # Step 1: 智能选题（用户输入优先，热搜仅作补充）
                     st.write("**Step 1/3** 智能选题...")
@@ -1195,11 +1199,14 @@ with tab5:
                     # 用户关键词优先：扩展更多候选
                     if op_seed_list:
                         st.write("基于关键词AI联想扩展...")
-                        expanded = topic_engine.expand_topics(
-                            op_seed_list, count=25, track=op_track
-                        )
-                        all_topics.extend(expanded)
-                        st.write(f"  ✅ 扩展出 {len(expanded)} 个相关选题")
+                        try:
+                            expanded = topic_engine.expand_topics(
+                                op_seed_list, count=25, track=op_track
+                            )
+                            all_topics.extend(expanded)
+                            st.write(f"  ✅ 扩展出 {len(expanded)} 个相关选题")
+                        except Exception as e:
+                            st.write(f"  ⚠ 关键词扩展失败: {e}")
 
                     # 热搜作为补充（最多取10条，避免喧宾夺主）
                     st.write("抓取热搜作为灵感补充...")
@@ -1207,6 +1214,9 @@ with tab5:
                     hot_titles = [h["title"] for h in hot if h["title"]][:10]
                     all_topics.extend(hot_titles)
                     st.write(f"  ✅ 补充 {len(hot_titles)} 条热搜")
+
+                    if not all_topics:
+                        raise ValueError("未获取到任何选题素材，请检查网络或关键词")
 
                     unique = topic_engine.deduplicate(all_topics)
                     scored = topic_engine.score_topics(unique[:30], track=op_track)
@@ -1247,8 +1257,8 @@ with tab5:
                         key_manager.consume_usage(st.session_state.get("card_key", ""), count=3)
 
                 except Exception as e:
-                    op_status.update(label="❌ 流水线失败", state="error")
-                    st.error(f"生成失败: {e}")
+                    op_status.update(label=f"❌ 流水线失败（{_model_name}）", state="error")
+                    st.error(f"生成失败: {type(e).__name__}: {e}")
 
     # 展示一键出片结果
     if "oneclick_result" in st.session_state and st.session_state["oneclick_result"]:
