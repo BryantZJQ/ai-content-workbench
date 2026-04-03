@@ -32,31 +32,37 @@ import content_analyzer
 # ============================================================
 st.markdown("""
 <style>
+    /* ========== 全局基础 ========== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .stApp {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ========== 主标题区 ========== */
     .main-title {
         text-align: center;
-        padding: 1rem 0 0.5rem 0;
+        padding: 1.5rem 0 0.3rem 0;
     }
     .main-title h1 {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 2.5rem;
+        font-size: 2.6rem;
         font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
     }
     .subtitle {
         text-align: center;
-        color: #666;
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
+        color: #94a3b8;
+        font-size: 1.05rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        margin-bottom: 1.8rem;
     }
-    .result-card {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin: 0.5rem 0;
-        border-left: 4px solid #667eea;
-    }
-    /* 隐藏Streamlit Cloud默认的部署者头像、Fork按钮、GitHub图标 */
+
+    /* ========== 隐藏 Streamlit Cloud 默认UI ========== */
     [data-testid="manage-app-button"],
     .stAppDeployButton,
     #MainMenu,
@@ -70,37 +76,299 @@ st.markdown("""
         display: none !important;
         visibility: hidden !important;
     }
+
+    /* ========== Tab 样式 ========== */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 4px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        padding: 4px;
+        border: 1px solid #e2e8f0;
+    }
+    .stTabs [data-baseweb="tab"] {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 8px;
+        color: #64748b;
+        transition: all 0.2s ease;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+    .stTabs [aria-selected="true"] {
+        background: white !important;
+        color: #6366f1 !important;
+        font-weight: 600 !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .stTabs [data-baseweb="tab-highlight"] {
+        display: none;
+    }
+    .stTabs [data-baseweb="tab-border"] {
+        display: none;
+    }
+
+    /* ========== 按钮 ========== */
+    .stButton > button[kind="primary"],
+    .stFormSubmitButton > button {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 0.6rem 1.5rem !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        letter-spacing: 0.02em;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35) !important;
+        transition: all 0.25s ease !important;
+    }
+    .stButton > button[kind="primary"]:hover,
+    .stFormSubmitButton > button:hover {
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
+        transform: translateY(-1px) !important;
+    }
+    .stButton > button:not([kind="primary"]) {
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+    }
+    .stButton > button:not([kind="primary"]):hover {
+        border-color: #6366f1 !important;
+        color: #6366f1 !important;
+        background: #f5f3ff !important;
+    }
+
+    /* ========== 输入框/表单 ========== */
+    .stTextInput > div > div > input,
+    .stTextArea > div > div > textarea,
+    .stSelectbox > div > div,
+    .stMultiSelect > div > div {
+        border-radius: 10px !important;
+        border: 1.5px solid #e2e8f0 !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .stTextInput > div > div > input:focus,
+    .stTextArea > div > div > textarea:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+    }
+
+    /* ========== 指标卡片 ========== */
+    [data-testid="stMetric"] {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 0.8rem !important;
+        color: #94a3b8 !important;
+        font-weight: 500 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    [data-testid="stMetricValue"] {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        color: #1e293b !important;
+    }
+
+    /* ========== Expander ========== */
+    .streamlit-expanderHeader {
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        border-radius: 10px !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    .streamlit-expanderContent {
+        border: 1px solid #e2e8f0 !important;
+        border-top: none !important;
+        border-radius: 0 0 10px 10px !important;
+    }
+
+    /* ========== 提示框美化 ========== */
+    .stAlert {
+        border-radius: 10px !important;
+        border: none !important;
+    }
+    div[data-testid="stNotification"] {
+        border-radius: 10px !important;
+    }
+
+    /* ========== 侧边栏 ========== */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+    }
+    section[data-testid="stSidebar"] .stMarkdown,
+    section[data-testid="stSidebar"] .stMarkdown p,
+    section[data-testid="stSidebar"] .stMarkdown li,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .stMarkdown h2,
+    section[data-testid="stSidebar"] .stMarkdown h3 {
+        color: #e2e8f0 !important;
+    }
+    section[data-testid="stSidebar"] .stMarkdown strong {
+        color: #f8fafc !important;
+    }
+    section[data-testid="stSidebar"] .stDivider {
+        border-color: rgba(255,255,255,0.08) !important;
+    }
+    section[data-testid="stSidebar"] .stTextInput > div > div > input {
+        background: rgba(255,255,255,0.06) !important;
+        border: 1.5px solid rgba(255,255,255,0.12) !important;
+        color: #f8fafc !important;
+        border-radius: 10px !important;
+    }
+    section[data-testid="stSidebar"] .stTextInput > div > div > input:focus {
+        border-color: #818cf8 !important;
+        box-shadow: 0 0 0 3px rgba(129,140,248,0.15) !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%) !important;
+        box-shadow: 0 4px 14px rgba(129, 140, 248, 0.3) !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]) {
+        border-color: rgba(255,255,255,0.15) !important;
+        color: #e2e8f0 !important;
+        background: transparent !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]):hover {
+        border-color: #818cf8 !important;
+        color: #818cf8 !important;
+        background: rgba(129,140,248,0.08) !important;
+    }
+    section[data-testid="stSidebar"] .stAlert {
+        background: rgba(255,255,255,0.05) !important;
+        color: #e2e8f0 !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    section[data-testid="stSidebar"] div[data-testid="stNotification"] p {
+        color: #e2e8f0 !important;
+    }
+
+    /* ========== 分割线 ========== */
+    hr {
+        border: none !important;
+        height: 1px !important;
+        background: linear-gradient(90deg, transparent, #e2e8f0, transparent) !important;
+        margin: 1.5rem 0 !important;
+    }
+
+    /* ========== 下载按钮 ========== */
+    .stDownloadButton > button {
+        border-radius: 10px !important;
+        border: 1.5px solid #e2e8f0 !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+        background: #f8fafc !important;
+    }
+    .stDownloadButton > button:hover {
+        border-color: #6366f1 !important;
+        color: #6366f1 !important;
+        background: #f5f3ff !important;
+        box-shadow: 0 2px 8px rgba(99,102,241,0.12) !important;
+    }
+
+    /* ========== Code 块 ========== */
+    .stCodeBlock {
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    /* ========== 自定义组件 ========== */
     .score-badge {
         display: inline-block;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
         color: white;
-        padding: 2px 10px;
-        border-radius: 12px;
-        font-weight: bold;
-        font-size: 0.9rem;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        box-shadow: 0 2px 8px rgba(99,102,241,0.25);
     }
     .hot-badge {
         display: inline-block;
-        background: #ff4757;
+        background: linear-gradient(135deg, #ef4444, #f97316);
         color: white;
-        padding: 2px 8px;
-        border-radius: 8px;
+        padding: 2px 10px;
+        border-radius: 20px;
         font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(239,68,68,0.25);
     }
     .platform-tag {
         display: inline-block;
-        background: #e8e8e8;
-        padding: 2px 8px;
-        border-radius: 8px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        padding: 2px 10px;
+        border-radius: 20px;
         font-size: 0.75rem;
+        font-weight: 500;
+        color: #475569;
         margin-right: 4px;
     }
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+
+    /* ========== 表格 ========== */
+    .stMarkdown table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        border: 1px solid #e2e8f0 !important;
+        width: 100% !important;
     }
-    .stTabs [data-baseweb="tab"] {
-        padding: 10px 24px;
-        font-size: 1rem;
+    .stMarkdown table thead tr th {
+        background: #f8fafc !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.85rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 2px solid #e2e8f0 !important;
+    }
+    .stMarkdown table tbody tr td {
+        padding: 0.65rem 1rem !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        color: #334155 !important;
+        font-size: 0.9rem !important;
+    }
+    .stMarkdown table tbody tr:last-child td {
+        border-bottom: none !important;
+    }
+    .stMarkdown table tbody tr:hover td {
+        background: #f8fafc !important;
+    }
+
+    /* ========== 滚动条 ========== */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* ========== Spinner ========== */
+    .stSpinner > div {
+        border-radius: 10px;
+    }
+
+    /* ========== Checkbox / Radio ========== */
+    .stCheckbox label, .stRadio label {
+        font-weight: 500 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -130,7 +398,15 @@ def _premium_gate(feature_name: str) -> bool:
 
 
 with st.sidebar:
-    st.markdown("## ⚙️ 设置")
+    st.markdown("""
+    <div style="text-align:center;padding:0.5rem 0 0.2rem 0;">
+        <span style="font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;">🎬 AI 工作台</span>
+        <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;letter-spacing:0.1em;">SHORT VIDEO CONTENT STUDIO</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.divider()
 
     # === 卡密验证 ===
     st.markdown("### 🔑 卡密")
@@ -215,30 +491,34 @@ with st.sidebar:
     if _api_key:
         os.environ["DEEPSEEK_API_KEY"] = _api_key
 
-    st.markdown("### 📊 功能说明")
+    st.markdown("### 📊 功能导航")
     st.markdown("""
-    - **🔥 热搜榜单** — 免费
-    - **🎯 智能选题** — 卡密
-    - **📝 脚本生成** — 卡密
-    - **🎬 分镜提示词** — 卡密
-    - **🚀 一键出片** — 卡密
-    - **🔍 爆款拆解** — 卡密
-    - **🏷️ 标题优化** — 卡密
-    - **📊 脚本诊断** — 卡密
-    """)
+    <div style="font-size:0.85rem;line-height:2;">
+    <span style="color:#34d399;">●</span> <b>热搜榜单</b> <span style="background:rgba(52,211,153,0.15);color:#34d399;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">免费</span><br>
+    <span style="color:#818cf8;">●</span> <b>智能选题</b><br>
+    <span style="color:#818cf8;">●</span> <b>脚本生成</b> <span style="color:#64748b;font-size:0.75rem;">12种风格</span><br>
+    <span style="color:#818cf8;">●</span> <b>分镜提示词</b><br>
+    <span style="color:#818cf8;">●</span> <b>一键出片</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">推荐</span><br>
+    <span style="color:#818cf8;">●</span> <b>爆款拆解</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span><br>
+    <span style="color:#818cf8;">●</span> <b>标题优化</b><br>
+    <span style="color:#818cf8;">●</span> <b>脚本诊断</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.divider()
 
-    st.markdown("""    
-    **获取卡密：**  
-    关注公众号回复「体验」获取免费体验卡
-    """)
+    st.markdown("""
+    <div style="text-align:center;padding:0.3rem 0;">
+        <div style="font-size:0.8rem;color:#94a3b8;">关注公众号回复「体验」</div>
+        <div style="font-size:0.8rem;color:#94a3b8;">获取免费试用卡密</div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.divider()
     st.markdown("""
-    <div style="text-align:center; color:#999; font-size:0.8rem;">
-    Powered by DeepSeek + MCP<br>
-    Made with ❤️
+    <div style="text-align:center;padding:0.2rem 0;">
+        <div style="font-size:0.7rem;color:#475569;letter-spacing:0.05em;">Powered by DeepSeek AI</div>
+        <div style="font-size:0.65rem;color:#334155;margin-top:2px;">v1.0 · Made with ❤️</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -254,10 +534,16 @@ st.markdown('<div class="subtitle">选题 · 脚本 · 分镜 — 一站搞定�
 # ============================================================
 if not _check_premium():
     st.markdown("""
-<div style="background:linear-gradient(135deg,#667eea10,#764ba210);border:1px solid #667eea30;
-border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;">
+<div style="background:linear-gradient(135deg,rgba(99,102,241,0.04),rgba(139,92,246,0.06));
+border:1px solid rgba(99,102,241,0.15);border-radius:16px;padding:2rem 2.5rem;margin-bottom:2rem;
+box-shadow:0 4px 24px rgba(99,102,241,0.06);">
 
-**👋 欢迎使用 AI 短视频内容工作台！** 输入卡密解锁以下 AI 功能：
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+<span style="font-size:1.3rem;">👋</span>
+<span style="font-size:1.15rem;font-weight:700;color:#1e293b;">欢迎使用 AI 短视频内容工作台</span>
+</div>
+
+<div style="color:#64748b;font-size:0.92rem;margin-bottom:1.2rem;">输入卡密即可解锁以下 <b style="color:#6366f1;">7 项 AI 功能</b>，5分钟产出一条视频的全套文案：</div>
 
 | 功能 | 说明 | 效果 |
 |------|------|------|
@@ -269,7 +555,10 @@ border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;">
 | 🏷️ **标题优化** | AI生成+对比标题点击率 | 选出最强标题 |
 | 📊 **脚本诊断** | 六维评分+完播率预测 | 发布前精准优化 |
 
-**🔥 热搜榜单免费使用，无需卡密！** 左侧输入卡密即可解锁全部 AI 功能 →
+<div style="margin-top:1rem;padding:0.75rem 1rem;background:rgba(52,211,153,0.08);border-radius:10px;
+border:1px solid rgba(52,211,153,0.2);font-size:0.9rem;">
+🔥 <b style="color:#059669;">热搜榜单完全免费</b>，无需卡密！← 左侧输入卡密解锁全部 AI 功能
+</div>
 
 </div>
 """, unsafe_allow_html=True)
