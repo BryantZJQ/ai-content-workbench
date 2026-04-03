@@ -593,6 +593,27 @@ with tab4:
             use_container_width=True,
         )
 
+        # 使用指南
+        st.markdown("---")
+        st.markdown("#### 📖 下一步：用提示词生成AI视频")
+        st.markdown("""
+提示词已就绪！复制上方提示词，粘贴到以下任一AI视频工具即可生成画面：
+
+| 工具 | 语言 | 特点 | 链接 |
+|------|------|------|------|
+| **可灵** | 🇨🇳 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
+| **Vidu** | 🇨🇳 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
+| **Pika** | 🇺🇸 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
+| **Runway** | 🇺🇸 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
+| **即梦** | 🇨🇳 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
+
+**操作步骤：**
+1. 复制对应语言的提示词（中文→可灵/Vidu/即梦，英文→Pika/Runway）
+2. 打开工具网站，选择"文生视频"或"图生视频"
+3. 粘贴提示词，设置时长（建议4-6秒/镜头）
+4. 生成后下载，用剪映/CapCut拼接所有镜头 + 配音即完成
+        """)
+
 
 # ===== Tab5: 一键出片 =====
 with tab5:
@@ -773,3 +794,24 @@ with tab5:
                 use_container_width=True,
                 key="op_dl_cues",
             )
+
+        # 使用指南
+        st.markdown("---")
+        st.markdown("#### 📖 下一步：用提示词生成AI视频")
+        st.markdown("""
+提示词已就绪！复制上方提示词，粘贴到以下任一AI视频工具即可生成画面：
+
+| 工具 | 语言 | 特点 | 链接 |
+|------|------|------|------|
+| **可灵** | 🇨🇳 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
+| **Vidu** | 🇨🇳 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
+| **Pika** | 🇺🇸 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
+| **Runway** | 🇺🇸 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
+| **即梦** | 🇨🇳 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
+
+**操作步骤：**
+1. 复制对应语言的提示词（中文→可灵/Vidu/即梦，英文→Pika/Runway）
+2. 打开工具网站，选择"文生视频"或"图生视频"
+3. 粘贴提示词，设置时长（建议4-6秒/镜头）
+4. 生成后下载，用剪映/CapCut拼接所有镜头 + 配音即完成
+        """)
