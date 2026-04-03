@@ -50,36 +50,72 @@ st.markdown("""
     /* span 不做强制覆盖，避免破坏 Streamlit 内部 Material Icons 图标字体 */
 
     /* ========== 主标题区 ========== */
-    .main-title {
+    .hero-banner {
+        position: relative;
         text-align: center;
-        padding: 1.8rem 0 0.5rem 0;
+        padding: 2.2rem 2rem 1.6rem;
+        margin: 0 -1rem 1.5rem;
+        background: linear-gradient(135deg, rgba(14,165,233,0.06) 0%, rgba(56,189,248,0.03) 50%, rgba(125,211,252,0.06) 100%);
+        border-radius: 18px;
+        border: 1px solid rgba(14,165,233,0.08);
+        overflow: hidden;
     }
-    .main-title h1 {
-        background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 40%, #38bdf8 70%, #7dd3fc 100%);
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .hero-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -30px;
+        left: -30px;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .hero-banner h1 {
+        position: relative;
+        background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 30%, #0ea5e9 60%, #38bdf8 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 2.4rem;
+        font-size: 2.2rem;
         font-weight: 800;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.06em;
         line-height: 1.3;
-        margin-bottom: 0.4rem;
+        margin: 0 0 0.6rem 0;
     }
-    .main-title::after {
-        content: '';
-        display: block;
-        width: 48px;
+    .hero-divider {
+        width: 40px;
         height: 3px;
-        background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+        background: linear-gradient(90deg, #0ea5e9, #7dd3fc);
         border-radius: 2px;
-        margin: 0.3rem auto 0;
+        margin: 0 auto 0.8rem;
     }
-    .subtitle {
-        text-align: center;
-        color: #64748b;
-        font-size: 0.95rem;
+    .hero-sub {
+        position: relative;
+        color: #475569;
+        font-size: 0.9rem;
         font-weight: 400;
-        letter-spacing: 0.12em;
-        margin-bottom: 1.8rem;
+        letter-spacing: 0.15em;
+        line-height: 1.6;
+    }
+    .hero-sub .dot {
+        display: inline-block;
+        width: 3px;
+        height: 3px;
+        background: #94a3b8;
+        border-radius: 50%;
+        margin: 0 0.6em;
+        vertical-align: middle;
     }
 
     /* ========== 隐藏 Streamlit Cloud 默认UI ========== */
@@ -591,8 +627,13 @@ with st.sidebar:
 # ============================================================
 # 标题
 # ============================================================
-st.markdown('<div class="main-title"><h1>AI短视频内容工作台</h1></div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">选题 · 脚本 · 分镜 — 一站搞定，5分钟产出一条视频的全部文案</div>', unsafe_allow_html=True)
+st.markdown('''
+<div class="hero-banner">
+    <h1>AI短视频内容工作台</h1>
+    <div class="hero-divider"></div>
+    <div class="hero-sub">选题<span class="dot"></span>脚本<span class="dot"></span>分镜 — 一站搞定，5分钟产出一条视频的全部文案</div>
+</div>
+''', unsafe_allow_html=True)
 
 # ============================================================
 # 新用户引导（未激活卡密时展示产品价值）
