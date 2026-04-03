@@ -2010,16 +2010,27 @@ if _is_admin:
                     _color = {"unused": "#64748b", "active": "#059669", "expired": "#dc2626", "exhausted": "#d97706", "disabled": "#6b7280"}
                     _bg = {"unused": "rgba(100,116,139,0.08)", "active": "rgba(5,150,105,0.08)", "expired": "rgba(220,38,38,0.08)", "exhausted": "rgba(217,119,6,0.08)", "disabled": "rgba(107,114,128,0.08)"}
                     _sc = _r["status"]
-                    st.markdown(f"""
-<div style="display:flex;align-items:center;gap:1rem;padding:0.7rem 1rem;margin-bottom:0.4rem;
-background:{_bg.get(_sc,'transparent')};border-radius:10px;border:1px solid rgba(226,232,240,0.5);font-size:0.85rem;">
-<div style="flex:2.5;font-family:monospace;font-weight:600;color:#1e293b;letter-spacing:0.02em;">{_r['key']}</div>
-<div style="flex:0.8;color:#475569;">{_r['plan_name']}</div>
-<div style="flex:0.8;"><span style="background:{_color.get(_sc,'#999')};color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">{_r['status_cn']}</span></div>
-<div style="flex:1;color:#475569;">剩余: {_r['remaining_uses']}</div>
-<div style="flex:1;color:#475569;">到期: {_r['expires_at']}</div>
-<div style="flex:0.8;color:#475569;">{_r['remaining_time']}</div>
-</div>""", unsafe_allow_html=True)
+                    _cols_row = st.columns([3, 1, 1, 1.2, 1.2, 1, 1.2])
+                    _cols_row[0].markdown(f"<code style='font-size:0.82rem;font-weight:600;'>{_r['key']}</code>", unsafe_allow_html=True)
+                    _cols_row[1].markdown(f"<span style='font-size:0.82rem;color:#475569;'>{_r['plan_name']}</span>", unsafe_allow_html=True)
+                    _cols_row[2].markdown(f"<span style='background:{_color.get(_sc,'#999')};color:#fff;padding:2px 8px;border-radius:4px;font-size:0.73rem;font-weight:600;'>{_r['status_cn']}</span>", unsafe_allow_html=True)
+                    _cols_row[3].markdown(f"<span style='font-size:0.82rem;color:#475569;'>剩余: {_r['remaining_uses']}</span>", unsafe_allow_html=True)
+                    _cols_row[4].markdown(f"<span style='font-size:0.82rem;color:#475569;'>到期: {_r['expires_at']}</span>", unsafe_allow_html=True)
+                    _cols_row[5].markdown(f"<span style='font-size:0.82rem;color:#475569;'>{_r['remaining_time']}</span>", unsafe_allow_html=True)
+                    # 操作按钮
+                    with _cols_row[6]:
+                        if _sc == "disabled":
+                            if st.button("启用", key=f"enable_{_r['key']}", type="primary"):
+                                _cloud_rec = _cloud_usage_cache.get(_r['key'], {})
+                                _tu = _cloud_rec.get("total_used", 0)
+                                cloud_db.update_usage(_r['key'], _tu, "active")
+                                st.rerun()
+                        elif _sc in ("unused", "active"):
+                            if st.button("禁用", key=f"disable_{_r['key']}"):
+                                _cloud_rec = _cloud_usage_cache.get(_r['key'], {})
+                                _tu = _cloud_rec.get("total_used", 0)
+                                cloud_db.update_usage(_r['key'], _tu, "disabled")
+                                st.rerun()
 
             # 导出
             if _rows:
