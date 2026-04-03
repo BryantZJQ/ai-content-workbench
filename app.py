@@ -79,29 +79,53 @@ st.markdown("""
 
     /* ========== Tab 样式 ========== */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
-        background: #f1f5f9;
-        border-radius: 12px;
-        padding: 4px;
-        border: 1px solid #e2e8f0;
+        gap: 0;
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        border: none;
+        border-bottom: 2px solid #e2e8f0;
     }
     .stTabs [data-baseweb="tab"] {
-        padding: 10px 20px;
-        font-size: 0.9rem;
+        padding: 10px 18px;
+        font-size: 0.88rem;
         font-weight: 500;
-        border-radius: 8px;
+        border-radius: 0;
         color: #64748b;
-        transition: all 0.2s ease;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: color 0.15s ease, border-color 0.15s ease;
     }
     .stTabs [data-baseweb="tab"]:hover {
-        background: #e2e8f0;
+        background: transparent;
         color: #1e293b;
     }
     .stTabs [aria-selected="true"] {
-        background: white !important;
-        color: #0ea5e9 !important;
+        background: transparent !important;
+        color: #0c4a6e !important;
         font-weight: 600 !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        border-bottom: 2px solid #0ea5e9 !important;
+        box-shadow: none;
+    }
+    /* 一键出片 Tab 高亮（第5个） */
+    .stTabs [data-baseweb="tab-list"] > button:nth-child(5) {
+        color: #0369a1;
+        font-weight: 600;
+        position: relative;
+    }
+    .stTabs [data-baseweb="tab-list"] > button:nth-child(5)::after {
+        content: "主推";
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        font-size: 0.55rem;
+        background: #0ea5e9;
+        color: white;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.04em;
     }
     .stTabs [data-baseweb="tab-highlight"] {
         display: none;
@@ -113,31 +137,33 @@ st.markdown("""
     /* ========== 按钮 ========== */
     .stButton > button[kind="primary"],
     .stFormSubmitButton > button {
-        background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%) !important;
+        background: #0ea5e9 !important;
         border: none !important;
-        border-radius: 10px !important;
-        padding: 0.6rem 1.5rem !important;
+        border-radius: 4px !important;
+        padding: 0.55rem 1.4rem !important;
         font-weight: 600 !important;
-        font-size: 0.95rem !important;
-        letter-spacing: 0.02em;
-        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35) !important;
-        transition: all 0.25s ease !important;
+        font-size: 0.9rem !important;
+        letter-spacing: 0.03em;
+        box-shadow: none !important;
+        transition: background 0.15s ease !important;
     }
     .stButton > button[kind="primary"]:hover,
     .stFormSubmitButton > button:hover {
-        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5) !important;
-        transform: translateY(-1px) !important;
+        background: #0284c7 !important;
+        box-shadow: none !important;
+        transform: none !important;
     }
     .stButton > button:not([kind="primary"]) {
-        border-radius: 10px !important;
-        border: 1px solid #e2e8f0 !important;
+        border-radius: 4px !important;
+        border: 1px solid #cbd5e1 !important;
         font-weight: 500 !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.15s ease !important;
+        background: white !important;
     }
     .stButton > button:not([kind="primary"]):hover {
         border-color: #0ea5e9 !important;
         color: #0ea5e9 !important;
-        background: #f0f9ff !important;
+        background: white !important;
     }
 
     /* ========== 输入框/表单 ========== */
@@ -145,23 +171,24 @@ st.markdown("""
     .stTextArea > div > div > textarea,
     .stSelectbox > div > div,
     .stMultiSelect > div > div {
-        border-radius: 10px !important;
-        border: 1.5px solid #e2e8f0 !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        border-radius: 4px !important;
+        border: 1px solid #cbd5e1 !important;
+        transition: border-color 0.15s ease !important;
     }
     .stTextInput > div > div > input:focus,
     .stTextArea > div > div > textarea:focus {
         border-color: #0ea5e9 !important;
-        box-shadow: 0 0 0 3px rgba(14,165,233,0.1) !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
 
     /* ========== 指标卡片 ========== */
     [data-testid="stMetric"] {
-        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        background: #f8fafc;
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
+        border-left: 3px solid #0ea5e9;
+        border-radius: 2px;
         padding: 1rem 1.2rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     [data-testid="stMetricLabel"] {
         font-size: 0.8rem !important;
@@ -180,23 +207,24 @@ st.markdown("""
     .streamlit-expanderHeader {
         font-weight: 600 !important;
         font-size: 0.95rem !important;
-        border-radius: 10px !important;
+        border-radius: 2px !important;
         background: #f8fafc !important;
         border: 1px solid #e2e8f0 !important;
+        border-left: 3px solid #0ea5e9 !important;
     }
     .streamlit-expanderContent {
         border: 1px solid #e2e8f0 !important;
         border-top: none !important;
-        border-radius: 0 0 10px 10px !important;
+        border-radius: 0 !important;
     }
 
     /* ========== 提示框美化 ========== */
     .stAlert {
-        border-radius: 10px !important;
+        border-radius: 3px !important;
         border: none !important;
     }
     div[data-testid="stNotification"] {
-        border-radius: 10px !important;
+        border-radius: 3px !important;
     }
 
     /* ========== 侧边栏 ========== */
@@ -221,15 +249,15 @@ st.markdown("""
         background: rgba(255,255,255,0.06) !important;
         border: 1.5px solid rgba(255,255,255,0.12) !important;
         color: #f8fafc !important;
-        border-radius: 10px !important;
+        border-radius: 4px !important;
     }
     section[data-testid="stSidebar"] .stTextInput > div > div > input:focus {
         border-color: #38bdf8 !important;
-        box-shadow: 0 0 0 3px rgba(56,189,248,0.15) !important;
+        box-shadow: none !important;
     }
     section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%) !important;
-        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3) !important;
+        background: #38bdf8 !important;
+        box-shadow: none !important;
     }
     section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]) {
         border-color: rgba(255,255,255,0.15) !important;
@@ -260,36 +288,34 @@ st.markdown("""
 
     /* ========== 下载按钮 ========== */
     .stDownloadButton > button {
-        border-radius: 10px !important;
-        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 4px !important;
+        border: 1px solid #cbd5e1 !important;
         font-weight: 500 !important;
-        transition: all 0.2s ease !important;
-        background: #f8fafc !important;
+        transition: all 0.15s ease !important;
+        background: white !important;
     }
     .stDownloadButton > button:hover {
         border-color: #0ea5e9 !important;
         color: #0ea5e9 !important;
-        background: #f0f9ff !important;
-        box-shadow: 0 2px 8px rgba(14,165,233,0.12) !important;
+        background: white !important;
     }
 
     /* ========== Code 块 ========== */
     .stCodeBlock {
-        border-radius: 10px !important;
+        border-radius: 2px !important;
         border: 1px solid #e2e8f0 !important;
     }
 
     /* ========== 自定义组件 ========== */
     .score-badge {
         display: inline-block;
-        background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+        background: #0ea5e9;
         color: white;
         padding: 3px 12px;
-        border-radius: 20px;
+        border-radius: 2px;
         font-weight: 600;
         font-size: 0.85rem;
         letter-spacing: 0.02em;
-        box-shadow: 0 2px 8px rgba(14,165,233,0.25);
     }
     .hot-badge {
         display: inline-block;
@@ -317,7 +343,7 @@ st.markdown("""
     .stMarkdown table {
         border-collapse: separate !important;
         border-spacing: 0 !important;
-        border-radius: 10px !important;
+        border-radius: 2px !important;
         overflow: hidden !important;
         border: 1px solid #e2e8f0 !important;
         width: 100% !important;
@@ -964,8 +990,17 @@ with tab4:
 
 # ===== Tab5: 一键出片 =====
 with tab5:
-    st.markdown("### 🚀 一键出片")
-    st.caption("输入赛道和关键词，AI自动完成 选题→脚本→分镜 全流程，一步到位")
+    st.markdown("""
+<div style="background:#f0f9ff;border-left:4px solid #0ea5e9;padding:1.2rem 1.5rem;margin-bottom:1.2rem;">
+<div style="font-size:1.1rem;font-weight:700;color:#0c4a6e;">🚀 一键出片 — 全自动流水线</div>
+<div style="color:#64748b;font-size:0.88rem;margin-top:4px;">输入赛道 + 关键词 → AI 自动完成 <b style="color:#0369a1;">选题 → 脚本 → 分镜</b> 全流程，一步到位</div>
+<div style="display:flex;gap:1.5rem;margin-top:0.6rem;font-size:0.78rem;color:#94a3b8;">
+<span>📌 Step 1 智能选题</span><span style="color:#cbd5e1;">→</span>
+<span>📝 Step 2 脚本生成</span><span style="color:#cbd5e1;">→</span>
+<span>🎬 Step 3 分镜提示词</span>
+</div>
+</div>
+""", unsafe_allow_html=True)
 
     with st.form("oneclick_form"):
         op_col1, op_col2 = st.columns(2)
