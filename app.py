@@ -217,10 +217,14 @@ with st.sidebar:
 
     st.markdown("### 📊 功能说明")
     st.markdown("""
-    - **🔥 热搜榜单** — 免费使用
-    - **🎯 智能选题** — 需要卡密
-    - **📝 脚本生成** — 需要卡密
-    - **🎬 分镜提示词** — 需要卡密
+    - **🔥 热搜榜单** — 免费
+    - **🎯 智能选题** — 卡密
+    - **📝 脚本生成** — 卡密
+    - **🎬 分镜提示词** — 卡密
+    - **🚀 一键出片** — 卡密
+    - **🔍 爆款拆解** — 卡密
+    - **🏷️ 标题优化** — 卡密
+    - **📊 脚本诊断** — 卡密
     """)
 
     st.divider()
@@ -245,6 +249,30 @@ with st.sidebar:
 st.markdown('<div class="main-title"><h1>🎬 AI短视频内容工作台</h1></div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">选题 · 脚本 · 分镜 — 一站搞定，5分钟产出一条视频的全部文案</div>', unsafe_allow_html=True)
 
+# ============================================================
+# 新用户引导（未激活卡密时展示产品价值）
+# ============================================================
+if not _check_premium():
+    st.markdown("""
+<div style="background:linear-gradient(135deg,#667eea10,#764ba210);border:1px solid #667eea30;
+border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;">
+
+**👋 欢迎使用 AI 短视频内容工作台！** 输入卡密解锁以下 AI 功能：
+
+| 功能 | 说明 | 效果 |
+|------|------|------|
+| 🎯 **智能选题** | 热搜 + AI 联想 + 智能打分 | 30秒找到高潜力选题 |
+| 📝 **脚本生成** | 12种风格，自动写完整配音稿 | 1分钟出完整脚本 |
+| 🎬 **分镜提示词** | 自动生成可灵/Pika提示词 | 直接复制到AI视频工具 |
+| 🚀 **一键出片** | 选题→脚本→分镜全自动 | 5分钟搞定全套文案 |
+| 🔍 **爆款拆解** | 逆向分析爆款文案结构 | 学会"为什么能火" |
+| 🏷️ **标题优化** | AI生成+对比标题点击率 | 选出最强标题 |
+| 📊 **脚本诊断** | 六维评分+完播率预测 | 发布前精准优化 |
+
+**🔥 热搜榜单免费使用，无需卡密！** 左侧输入卡密即可解锁全部 AI 功能 →
+
+</div>
+""", unsafe_allow_html=True)
 
 # ============================================================
 # 主体 Tabs
@@ -517,25 +545,31 @@ with tab4:
     st.markdown("### AI视频分镜提示词")
     st.caption("生成可直接复制到可灵/Pika/Runway使用的分镜提示词")
 
-    if "generated_script" in st.session_state and st.session_state["generated_script"]:
+    _has_prev_script = "generated_script" in st.session_state and st.session_state["generated_script"]
+
+    if _has_prev_script:
         prev = st.session_state["generated_script"]
         st.info(f"检测到已生成的脚本：**{prev.get('title', '')}**（{prev.get('word_count', 0)}字）")
         use_prev = st.checkbox("使用上面生成的脚本", value=True, key="use_prev_script")
     else:
         use_prev = False
 
-    if not use_prev:
-        vc_topic = st.text_input("选题", placeholder="视频选题", key="vc_topic")
-        vc_script = st.text_area("脚本内容", placeholder="粘贴你的完整脚本文案...", height=200, key="vc_script")
-        vc_duration = st.number_input("时长（秒）", min_value=10, max_value=600, value=60, key="vc_duration")
-        vc_platform = st.selectbox("目标平台", ["通用", "抖音", "B站", "小红书"], key="vc_platform")
-    else:
+    if use_prev:
         vc_topic = prev.get("topic", "")
         vc_script = prev.get("full_script", "")
         vc_duration = prev.get("estimated_duration_seconds", 60)
         vc_platform = prev.get("platform", "通用")
-
-    vc_btn = st.button("🎬 生成分镜", type="primary", use_container_width=True)
+        vc_btn = st.button("🎬 生成分镜", type="primary", use_container_width=True)
+    else:
+        with st.form("visual_cue_form"):
+            vc_topic = st.text_input("选题", placeholder="视频选题", key="vc_topic")
+            vc_script = st.text_area("脚本内容", placeholder="粘贴你的完整脚本文案...", height=200, key="vc_script")
+            vc_col1, vc_col2 = st.columns(2)
+            with vc_col1:
+                vc_duration = st.number_input("⏱️ 时长（秒）", min_value=10, max_value=600, value=60, key="vc_duration")
+            with vc_col2:
+                vc_platform = st.selectbox("📱 目标平台", ["通用", "抖音", "B站", "小红书"], key="vc_platform")
+            vc_btn = st.form_submit_button("🎬 生成分镜", type="primary", use_container_width=True)
 
     if vc_btn:
         if not _premium_gate("分镜生成"):
@@ -811,6 +845,50 @@ with tab5:
                 mime="text/plain",
                 use_container_width=True,
                 key="op_dl_cues",
+            )
+
+        # 一键导出完整文档（脚本+分镜合并）
+        if opr.get("script") and opr.get("cues"):
+            st.markdown("---")
+            st.markdown("#### 📦 一键导出完整文档")
+            _full_doc = []
+            _s = opr["script"]
+            _full_doc.append(f"{'='*60}")
+            _full_doc.append(f"AI短视频内容工作台 — 一键出片完整文档")
+            _full_doc.append(f"{'='*60}\n")
+            if opr.get("topic"):
+                _full_doc.append(f"【选题】{opr['topic'].get('topic', '')}（{opr['topic'].get('score', 0)}分）")
+                if opr['topic'].get('reason'):
+                    _full_doc.append(f"【推荐理由】{opr['topic']['reason']}\n")
+            _full_doc.append(f"【标题】{_s.get('title', '')}")
+            _full_doc.append(f"【风格】{_s.get('style', '')}  |  【时长】{_s.get('estimated_duration_seconds', 0)}秒  |  【字数】{_s.get('word_count', 0)}字\n")
+            _full_doc.append(f"{'─'*40}")
+            _full_doc.append(f"一、完整脚本")
+            _full_doc.append(f"{'─'*40}\n")
+            _full_doc.append(_s.get("full_script", ""))
+            _full_doc.append(f"\n{'─'*40}")
+            _full_doc.append(f"二、分镜提示词（共{len(opr['cues'])}个镜头）")
+            _full_doc.append(f"{'─'*40}\n")
+            for _shot in opr["cues"]:
+                _full_doc.append(f"--- 镜头 {_shot.get('shot_number', '?')} | {_shot.get('timestamp', '')} ---")
+                if _shot.get("narration"):
+                    _full_doc.append(f"配音：{_shot['narration']}")
+                if _shot.get("scene"):
+                    _full_doc.append(f"画面：{_shot['scene']}")
+                if _shot.get("prompt_cn"):
+                    _full_doc.append(f"中文提示词：{_shot['prompt_cn']}")
+                if _shot.get("prompt_en"):
+                    _full_doc.append(f"英文提示词：{_shot['prompt_en']}")
+                _full_doc.append("")
+            _full_doc.append(f"{'='*60}")
+            _full_doc.append("由 AI短视频内容工作台 生成")
+            st.download_button(
+                "📦 下载完整文档（脚本+分镜）",
+                data="\n".join(_full_doc),
+                file_name=f"{_s.get('title', '一键出片')}_完整文档.txt",
+                mime="text/plain",
+                use_container_width=True,
+                key="op_dl_full",
             )
 
         # 使用指南
