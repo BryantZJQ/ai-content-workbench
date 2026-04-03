@@ -1,7 +1,6 @@
 """卡密管理系统 — 生成/验证/限额控制"""
 
 import json
-import hashlib
 import secrets
 import string
 from datetime import datetime, timedelta
