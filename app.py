@@ -194,21 +194,21 @@ st.markdown("""
     /* ========== 按钮 ========== */
     .stButton > button[kind="primary"],
     .stFormSubmitButton > button {
-        background: #0ea5e9 !important;
+        background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%) !important;
         border: none !important;
-        border-radius: 8px !important;
+        border-radius: 10px !important;
         padding: 0.55rem 1.4rem !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
         letter-spacing: 0.03em;
-        box-shadow: 0 1px 3px rgba(14,165,233,0.15) !important;
-        transition: all 0.15s ease !important;
+        box-shadow: 0 2px 8px rgba(14,165,233,0.25) !important;
+        transition: all 0.2s ease !important;
     }
     .stButton > button[kind="primary"]:hover,
     .stFormSubmitButton > button:hover {
-        background: #0284c7 !important;
-        box-shadow: none !important;
-        transform: none !important;
+        background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%) !important;
+        box-shadow: 0 4px 14px rgba(14,165,233,0.3) !important;
+        transform: translateY(-1px) !important;
     }
     .stButton > button:not([kind="primary"]) {
         border-radius: 8px !important;
@@ -239,6 +239,27 @@ st.markdown("""
         box-shadow: 0 0 0 3px rgba(14,165,233,0.06) !important;
         background: #ffffff !important;
         outline: none !important;
+    }
+
+    /* ========== MultiSelect 标签 ========== */
+    .stMultiSelect [data-baseweb="tag"] {
+        background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+        border: none !important;
+        border-radius: 6px !important;
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        font-size: 0.82rem !important;
+        padding: 2px 8px !important;
+        box-shadow: 0 1px 4px rgba(14,165,233,0.2);
+    }
+    .stMultiSelect [data-baseweb="tag"] span {
+        color: #ffffff !important;
+    }
+    .stMultiSelect [data-baseweb="tag"] [role="presentation"] {
+        color: rgba(255,255,255,0.8) !important;
+    }
+    .stMultiSelect [data-baseweb="tag"] [role="presentation"]:hover {
+        color: #ffffff !important;
     }
 
     /* ========== 指标卡片 ========== */
