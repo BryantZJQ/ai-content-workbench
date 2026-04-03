@@ -47,19 +47,7 @@ st.markdown("""
     .stApp li, .stApp td, .stApp th, .stApp a, .stApp code, .stApp pre {
         font-family: inherit !important;
     }
-    .stApp span {
-        font-family: inherit;
-    }
-    /* 恢复 Streamlit 内部图标字体 */
-    .stApp [data-testid] span[class*="Icon"],
-    .stApp .material-symbols-rounded,
-    .stApp .material-symbols-outlined,
-    .stApp .material-icons,
-    .stApp [class*="material-symbols"],
-    .stApp [class*="icon"] > span,
-    .stApp [data-baseweb] span[aria-hidden="true"] {
-        font-family: 'Material Symbols Rounded', 'Material Symbols Outlined', 'Material Icons', sans-serif !important;
-    }
+    /* span 不做强制覆盖，避免破坏 Streamlit 内部 Material Icons 图标字体 */
 
     /* ========== 主标题区 ========== */
     .main-title {
