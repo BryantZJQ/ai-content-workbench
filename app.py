@@ -463,13 +463,16 @@ with st.sidebar:
             # 试用卡(按次数)不显示到期时间
             if v.get("expires_at") and not v.get("total_limit"):
                 st.caption(f"到期时间：{v['expires_at']}")
-            # 切换按钮
-            if st.button("切换卡密", use_container_width=True):
-                st.session_state.pop("card_key", None)
-                st.session_state.pop("key_validation", None)
-                if "t" in st.query_params:
-                    del st.query_params["t"]
-                st.rerun()
+            # 切换按钮（带确认提示）
+            with st.popover("切换卡密", use_container_width=True):
+                st.markdown("**确认切换卡密？**")
+                st.caption("当前卡密将被移除，你需要重新输入新的卡密才能继续使用付费功能。")
+                if st.button("确认切换", type="primary", use_container_width=True, key="confirm_switch"):
+                    st.session_state.pop("card_key", None)
+                    st.session_state.pop("key_validation", None)
+                    if "t" in st.query_params:
+                        del st.query_params["t"]
+                    st.rerun()
         else:
             st.error(v.get("message", "卡密无效"))
             # 过期/失效自动解锁输入框
