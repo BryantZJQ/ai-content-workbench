@@ -126,10 +126,9 @@ with st.sidebar:
     )
 
     if input_card_key:
-        if input_card_key != st.session_state.get("card_key", ""):
-            st.session_state["card_key"] = input_card_key
-            result = key_manager.validate_key(input_card_key)
-            st.session_state["key_validation"] = result
+        st.session_state["card_key"] = input_card_key
+        result = key_manager.validate_key(input_card_key)
+        st.session_state["key_validation"] = result
 
         v = st.session_state.get("key_validation", {})
         if v.get("valid"):
