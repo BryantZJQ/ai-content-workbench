@@ -56,6 +56,20 @@ st.markdown("""
         margin: 0.5rem 0;
         border-left: 4px solid #667eea;
     }
+    /* 隐藏Streamlit Cloud默认的部署者头像、Fork按钮、GitHub图标 */
+    [data-testid="manage-app-button"],
+    .stAppDeployButton,
+    #MainMenu,
+    footer,
+    [data-testid="stStatusWidget"],
+    ._profileContainer_gzau3_53,
+    ._container_gzau3_1,
+    .viewerBadge_container__r5tak,
+    .viewerBadge_link__qRIco,
+    [data-testid="stAppViewBlockContainer"] > div:last-child > div[data-testid="stVerticalBlock"] > div:last-child iframe {
+        display: none !important;
+        visibility: hidden !important;
+    }
     .score-badge {
         display: inline-block;
         background: linear-gradient(135deg, #667eea, #764ba2);
