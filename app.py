@@ -40,6 +40,7 @@ st.markdown("""
                      'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif !important;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 30%, #f1f5f9 100%) !important;
     }
     /* 继承字体到子元素，但排除图标字体 */
     .stApp p, .stApp div, .stApp label, .stApp input, .stApp textarea,
@@ -136,9 +137,9 @@ st.markdown("""
     /* ========== Tab 样式 ========== */
     .stTabs [data-baseweb="tab-list"] {
         gap: 0;
-        background: transparent;
-        border-radius: 0;
-        padding: 0;
+        background: linear-gradient(180deg, rgba(241,245,249,0.6) 0%, rgba(248,250,252,0.3) 100%);
+        border-radius: 12px 12px 0 0;
+        padding: 0.3rem 0.5rem 0;
         border: none;
         border-bottom: 2px solid #e2e8f0;
     }
@@ -195,13 +196,13 @@ st.markdown("""
     .stFormSubmitButton > button {
         background: #0ea5e9 !important;
         border: none !important;
-        border-radius: 4px !important;
+        border-radius: 8px !important;
         padding: 0.55rem 1.4rem !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
         letter-spacing: 0.03em;
-        box-shadow: none !important;
-        transition: background 0.15s ease !important;
+        box-shadow: 0 1px 3px rgba(14,165,233,0.15) !important;
+        transition: all 0.15s ease !important;
     }
     .stButton > button[kind="primary"]:hover,
     .stFormSubmitButton > button:hover {
@@ -210,16 +211,16 @@ st.markdown("""
         transform: none !important;
     }
     .stButton > button:not([kind="primary"]) {
-        border-radius: 4px !important;
-        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(203,213,225,0.8) !important;
         font-weight: 500 !important;
         transition: all 0.15s ease !important;
-        background: white !important;
+        background: rgba(255,255,255,0.7) !important;
     }
     .stButton > button:not([kind="primary"]):hover {
         border-color: #0ea5e9 !important;
         color: #0ea5e9 !important;
-        background: white !important;
+        background: rgba(255,255,255,0.9) !important;
     }
 
     /* ========== 输入框/表单 ========== */
@@ -227,24 +228,27 @@ st.markdown("""
     .stTextArea > div > div > textarea,
     .stSelectbox > div > div,
     .stMultiSelect > div > div {
-        border-radius: 4px !important;
-        border: 1px solid #cbd5e1 !important;
-        transition: border-color 0.15s ease !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(203,213,225,0.8) !important;
+        background: rgba(255,255,255,0.7) !important;
+        transition: all 0.15s ease !important;
     }
     .stTextInput > div > div > input:focus,
     .stTextArea > div > div > textarea:focus {
         border-color: #0ea5e9 !important;
-        box-shadow: none !important;
+        box-shadow: 0 0 0 3px rgba(14,165,233,0.06) !important;
+        background: #ffffff !important;
         outline: none !important;
     }
 
     /* ========== 指标卡片 ========== */
     [data-testid="stMetric"] {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, rgba(248,250,252,0.8) 0%, rgba(241,245,249,0.5) 100%);
+        border: 1px solid rgba(226,232,240,0.8);
         border-left: 3px solid #0ea5e9;
-        border-radius: 2px;
+        border-radius: 8px;
         padding: 1rem 1.2rem;
+        backdrop-filter: blur(4px);
     }
     [data-testid="stMetricLabel"] {
         font-size: 0.8rem !important;
@@ -263,24 +267,26 @@ st.markdown("""
     .streamlit-expanderHeader {
         font-weight: 600 !important;
         font-size: 0.95rem !important;
-        border-radius: 2px !important;
-        background: #f8fafc !important;
-        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px 8px 0 0 !important;
+        background: linear-gradient(135deg, rgba(240,249,255,0.5), rgba(248,250,252,0.8)) !important;
+        border: 1px solid rgba(226,232,240,0.6) !important;
         border-left: 3px solid #0ea5e9 !important;
     }
     .streamlit-expanderContent {
-        border: 1px solid #e2e8f0 !important;
+        border: 1px solid rgba(226,232,240,0.6) !important;
         border-top: none !important;
-        border-radius: 0 !important;
+        border-radius: 0 0 8px 8px !important;
+        background: rgba(255,255,255,0.6) !important;
     }
 
     /* ========== 提示框美化 ========== */
     .stAlert {
-        border-radius: 3px !important;
+        border-radius: 10px !important;
         border: none !important;
+        backdrop-filter: blur(4px);
     }
     div[data-testid="stNotification"] {
-        border-radius: 3px !important;
+        border-radius: 10px !important;
     }
 
     /* ========== 侧边栏 ========== */
