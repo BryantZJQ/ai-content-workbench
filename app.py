@@ -52,23 +52,33 @@ st.markdown("""
     /* ========== 主标题区 ========== */
     .main-title {
         text-align: center;
-        padding: 1.5rem 0 0.3rem 0;
+        padding: 1.8rem 0 0.5rem 0;
     }
     .main-title h1 {
-        background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 50%, #7dd3fc 100%);
+        background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 40%, #38bdf8 70%, #7dd3fc 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 2.6rem;
+        font-size: 2.4rem;
         font-weight: 800;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
+        letter-spacing: 0.04em;
+        line-height: 1.3;
+        margin-bottom: 0.4rem;
+    }
+    .main-title::after {
+        content: '';
+        display: block;
+        width: 48px;
+        height: 3px;
+        background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+        border-radius: 2px;
+        margin: 0.3rem auto 0;
     }
     .subtitle {
         text-align: center;
-        color: #94a3b8;
-        font-size: 1.05rem;
+        color: #64748b;
+        font-size: 0.95rem;
         font-weight: 400;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.12em;
         margin-bottom: 1.8rem;
     }
 
