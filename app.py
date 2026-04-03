@@ -708,11 +708,12 @@ _is_admin = st.query_params.get("mode") == "admin"
 _tab_names = ["热搜榜单", "智能选题", "脚本生成", "分镜提示词",
               "一键出片", "爆款拆解", "标题优化", "脚本诊断"]
 if _is_admin:
-    _tab_names.append("发帖助手")
+    _tab_names += ["卡密管理", "发帖助手"]
 _tabs = st.tabs(_tab_names)
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = _tabs[:8]
 if _is_admin:
-    tab_admin = _tabs[8]
+    tab_keys = _tabs[8]
+    tab_admin = _tabs[9]
 
 
 # ===== Tab1: 热搜 =====
@@ -1852,6 +1853,179 @@ with tab8:
                 )
 
         _render_share_banner("脚本诊断")
+
+
+# ===== Tab Keys: 卡密管理（仅管理员可见）=====
+if _is_admin:
+    with tab_keys:
+        st.markdown("### 卡密管理")
+        st.caption("管理员专用 — 所有卡密状态一览")
+
+        # 加载全部卡密
+        _all_keys = {}
+        _all_keys.update(key_manager._load_keys())
+        _all_keys.update(key_manager._load_cloud_keys())
+
+        if not _all_keys:
+            st.info("暂无卡密数据")
+        else:
+            from datetime import datetime as _dt
+
+            # 云端用量缓存
+            _cloud_usage_cache = {}
+            if cloud_db.is_available():
+                for _kc in _all_keys:
+                    try:
+                        _cr = cloud_db.get_usage(_kc)
+                        if _cr:
+                            _cloud_usage_cache[_kc] = _cr
+                    except Exception:
+                        pass
+
+            # 统计
+            _cnt_total = len(_all_keys)
+            _cnt_unused = 0
+            _cnt_active = 0
+            _cnt_expired = 0
+            _cnt_exhausted = 0
+            _cnt_disabled = 0
+
+            _rows = []
+            _now = _dt.now()
+
+            for _kc, _ki in _all_keys.items():
+                _plan = _ki.get("plan", "")
+                _plan_name = _ki.get("plan_name", key_manager.KEY_PLANS.get(_plan, {}).get("name", _plan))
+                _status = _ki.get("status", "unused")
+
+                # 云端状态优先
+                _cloud_rec = _cloud_usage_cache.get(_kc, {})
+                if _cloud_rec.get("status") == "disabled":
+                    _status = "disabled"
+
+                # 真实用量（云端优先）
+                _total_used = _cloud_rec.get("total_used", _ki.get("total_used", 0))
+                _total_limit = _ki.get("total_limit", key_manager.KEY_PLANS.get(_plan, {}).get("total_limit", 0))
+                _daily_limit = _ki.get("daily_limit", key_manager.KEY_PLANS.get(_plan, {}).get("daily_limit", 0))
+
+                # 过期时间
+                _exp_str = _ki.get("expires_at")
+                _exp_display = "—"
+                _remaining_time = "—"
+                if _exp_str:
+                    try:
+                        _exp_dt = _dt.fromisoformat(_exp_str)
+                        _exp_display = _exp_dt.strftime("%Y-%m-%d")
+                        if _now > _exp_dt:
+                            _status = "expired"
+                            _remaining_time = "已过期"
+                        else:
+                            _delta = _exp_dt - _now
+                            if _delta.days > 0:
+                                _remaining_time = f"{_delta.days}天"
+                            else:
+                                _remaining_time = f"{_delta.seconds // 3600}小时"
+                    except Exception:
+                        pass
+
+                # 次数限制卡判断耗尽
+                if _total_limit > 0 and _total_used >= _total_limit:
+                    _status = "exhausted"
+
+                # 剩余次数
+                if _total_limit > 0:
+                    _remaining_uses = f"{max(0, _total_limit - _total_used)}/{_total_limit}"
+                else:
+                    _remaining_uses = f"{_daily_limit}/天"
+
+                # 激活时间
+                _act_str = _ki.get("activated_at")
+                _act_display = "—"
+                if _act_str:
+                    try:
+                        _act_display = _dt.fromisoformat(_act_str).strftime("%Y-%m-%d %H:%M")
+                    except Exception:
+                        pass
+
+                # 统计
+                if _status == "unused":
+                    _cnt_unused += 1
+                elif _status == "active":
+                    _cnt_active += 1
+                elif _status == "expired":
+                    _cnt_expired += 1
+                elif _status == "exhausted":
+                    _cnt_exhausted += 1
+                elif _status == "disabled":
+                    _cnt_disabled += 1
+
+                _status_map = {
+                    "unused": "未激活",
+                    "active": "使用中",
+                    "expired": "已过期",
+                    "exhausted": "已用完",
+                    "disabled": "已禁用",
+                }
+
+                _rows.append({
+                    "key": _kc,
+                    "plan_name": _plan_name,
+                    "status": _status,
+                    "status_cn": _status_map.get(_status, _status),
+                    "total_used": _total_used,
+                    "remaining_uses": _remaining_uses,
+                    "expires_at": _exp_display,
+                    "remaining_time": _remaining_time,
+                    "activated_at": _act_display,
+                })
+
+            # 概览指标
+            _m1, _m2, _m3, _m4, _m5 = st.columns(5)
+            _m1.metric("总计", _cnt_total)
+            _m2.metric("未激活", _cnt_unused)
+            _m3.metric("使用中", _cnt_active)
+            _m4.metric("已过期", _cnt_expired)
+            _m5.metric("已用完/禁用", _cnt_exhausted + _cnt_disabled)
+
+            st.markdown("---")
+
+            # 筛选
+            _filter = st.radio(
+                "筛选状态", ["全部", "未激活", "使用中", "已过期", "已用完", "已禁用"],
+                horizontal=True, key="key_filter"
+            )
+            _filter_map = {"未激活": "unused", "使用中": "active", "已过期": "expired", "已用完": "exhausted", "已禁用": "disabled"}
+            if _filter != "全部":
+                _rows = [r for r in _rows if r["status"] == _filter_map[_filter]]
+
+            # 排序：使用中 > 未激活 > 已过期 > 已用完 > 已禁用
+            _sort_order = {"active": 0, "unused": 1, "expired": 2, "exhausted": 3, "disabled": 4}
+            _rows.sort(key=lambda r: _sort_order.get(r["status"], 9))
+
+            if not _rows:
+                st.info("该筛选条件下没有卡密")
+            else:
+                for _r in _rows:
+                    _color = {"unused": "#64748b", "active": "#059669", "expired": "#dc2626", "exhausted": "#d97706", "disabled": "#6b7280"}
+                    _bg = {"unused": "rgba(100,116,139,0.08)", "active": "rgba(5,150,105,0.08)", "expired": "rgba(220,38,38,0.08)", "exhausted": "rgba(217,119,6,0.08)", "disabled": "rgba(107,114,128,0.08)"}
+                    _sc = _r["status"]
+                    st.markdown(f"""
+<div style="display:flex;align-items:center;gap:1rem;padding:0.7rem 1rem;margin-bottom:0.4rem;
+background:{_bg.get(_sc,'transparent')};border-radius:10px;border:1px solid rgba(226,232,240,0.5);font-size:0.85rem;">
+<div style="flex:2.5;font-family:monospace;font-weight:600;color:#1e293b;letter-spacing:0.02em;">{_r['key']}</div>
+<div style="flex:0.8;color:#475569;">{_r['plan_name']}</div>
+<div style="flex:0.8;"><span style="background:{_color.get(_sc,'#999')};color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;">{_r['status_cn']}</span></div>
+<div style="flex:1;color:#475569;">剩余: {_r['remaining_uses']}</div>
+<div style="flex:1;color:#475569;">到期: {_r['expires_at']}</div>
+<div style="flex:0.8;color:#475569;">{_r['remaining_time']}</div>
+</div>""", unsafe_allow_html=True)
+
+            # 导出
+            if _rows:
+                _csv_lines = ["卡密,类型,状态,已用次数,剩余额度,到期时间,剩余时间,激活时间"]
+                for _r in _rows:
+                    _csv_lines.append(f"{_r['key']},{_r['plan_name']},{_r['status_cn']},{_r['total_used']},{_r['remaining_uses']},{_r['expires_at']},{_r['remaining_time']},{_r['activated_at']}")
+                st.download_button("导出CSV", data="\n".join(_csv_lines), file_name="卡密总览.csv", mime="text/csv")
 
 
 # ===== Tab Admin: 发帖助手（仅管理员可见）=====
