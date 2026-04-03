@@ -128,34 +128,56 @@ with st.sidebar:
         except Exception:
             pass
 
-    _saved_key = st.session_state.get("card_key", "")
-    input_card_key = st.text_input(
-        "输入卡密",
-        value=_saved_key,
-        placeholder="ACP-XXXX-XXXX-XXXX",
-        type="password",
-        help="输入卡密解锁全部功能",
-    )
-    activate_btn = st.button("🔓 激活卡密", type="primary", use_container_width=True)
+    _is_activated = bool(st.session_state.get("card_key"))
 
-    if activate_btn and input_card_key:
-        st.session_state["card_key"] = input_card_key
-        st.query_params["t"] = base64.b64encode(input_card_key.encode()).decode()
-    elif activate_btn and not input_card_key:
-        st.warning("请先输入卡密")
+    if _is_activated:
+        # ===== 状态B：已激活 =====
+        _active_key = st.session_state["card_key"]
+        # 显示已激活的卡密（脱敏）
+        masked = _active_key[:4] + "····" + _active_key[-4:] if len(_active_key) > 8 else "····"
+        st.text_input("当前卡密", value=masked, disabled=True)
 
-    # 有卡密时实时验证（每次渲染都读最新数据）
-    _active_key = st.session_state.get("card_key", "")
-    if _active_key:
+        # 实时验证
         v = key_manager.validate_key(_active_key)
         st.session_state["key_validation"] = v
+
         if v.get("valid"):
             st.success(f"✅ {v.get('plan_name', '')} | {v.get('remaining_info', '')}")
             if v.get("expires_at"):
                 st.caption(f"到期时间：{v['expires_at']}")
         else:
             st.error(v.get("message", "卡密无效"))
+
+        # 切换按钮
+        if st.button("� 切换卡密", use_container_width=True):
+            st.session_state.pop("card_key", None)
+            st.session_state.pop("key_validation", None)
+            if "t" in st.query_params:
+                del st.query_params["t"]
+            st.rerun()
     else:
+        # ===== 状态A：未激活 =====
+        input_card_key = st.text_input(
+            "输入卡密",
+            value="",
+            placeholder="ACP-XXXX-XXXX-XXXX",
+            type="password",
+            help="输入卡密解锁全部功能",
+        )
+
+        if st.button("🔓 激活卡密", type="primary", use_container_width=True):
+            if input_card_key:
+                result = key_manager.validate_key(input_card_key)
+                if result.get("valid"):
+                    st.session_state["card_key"] = input_card_key
+                    st.session_state["key_validation"] = result
+                    st.query_params["t"] = base64.b64encode(input_card_key.encode()).decode()
+                    st.rerun()
+                else:
+                    st.error(result.get("message", "卡密无效"))
+            else:
+                st.warning("请先输入卡密")
+
         st.session_state["key_validation"] = None
         st.info("🔓 输入卡密解锁脚本生成等付费功能")
 
