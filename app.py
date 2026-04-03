@@ -35,8 +35,11 @@ st.markdown("""
     /* ========== 全局基础 ========== */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    .stApp {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    .stApp, .stApp * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                     'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     /* ========== 主标题区 ========== */
@@ -524,15 +527,15 @@ with st.sidebar:
 
     st.markdown("### 功能导航")
     st.markdown("""
-    <div style="font-size:0.85rem;line-height:2;">
-    <span style="color:#34d399;">●</span> <b>热搜榜单</b> <span style="background:rgba(52,211,153,0.15);color:#34d399;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">免费</span><br>
-    <span style="color:#0ea5e9;">●</span> <b>智能选题</b><br>
-    <span style="color:#0ea5e9;">●</span> <b>脚本生成</b> <span style="color:#64748b;font-size:0.75rem;">12种风格</span><br>
-    <span style="color:#0ea5e9;">●</span> <b>分镜提示词</b><br>
-    <span style="color:#0ea5e9;">●</span> <b>一键出片</b> <span style="background:rgba(251,191,36,0.15);color:#d97706;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">推荐</span><br>
-    <span style="color:#0ea5e9;">●</span> <b>爆款拆解</b> <span style="background:rgba(251,191,36,0.15);color:#d97706;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span><br>
-    <span style="color:#0ea5e9;">●</span> <b>标题优化</b><br>
-    <span style="color:#0ea5e9;">●</span> <b>脚本诊断</b> <span style="background:rgba(251,191,36,0.15);color:#d97706;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span>
+    <div style="font-size:0.85rem;line-height:2.2;">
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>热搜榜单</b> <span style="color:#94a3b8;font-size:0.72rem;margin-left:4px;">免费</span><br>
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>智能选题</b><br>
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>脚本生成</b> <span style="color:#94a3b8;font-size:0.72rem;margin-left:4px;">12种风格</span><br>
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>分镜提示词</b><br>
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>一键出片</b> <span style="color:#94a3b8;font-size:0.72rem;margin-left:4px;">★</span><br>
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>爆款拆解</b><br>
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>标题优化</b><br>
+    <span style="color:#0ea5e9;font-size:0.5rem;vertical-align:middle;">●</span> <b>脚本诊断</b>
     </div>
     """, unsafe_allow_html=True)
 
