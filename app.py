@@ -120,26 +120,35 @@ with st.sidebar:
     st.markdown("### 🔑 卡密")
     input_card_key = st.text_input(
         "输入卡密",
-        value=st.session_state.get("card_key", ""),
+        value=st.session_state.get("card_key_input", ""),
         placeholder="ACP-XXXX-XXXX-XXXX",
         help="输入卡密解锁全部功能",
+        key="card_key_input_field",
     )
+    activate_btn = st.button("🔓 激活卡密", type="primary", use_container_width=True)
 
-    if input_card_key:
+    if activate_btn and input_card_key:
+        st.session_state["card_key_input"] = input_card_key
         st.session_state["card_key"] = input_card_key
         result = key_manager.validate_key(input_card_key)
         st.session_state["key_validation"] = result
+    elif activate_btn and not input_card_key:
+        st.warning("请先输入卡密")
 
-        v = st.session_state.get("key_validation", {})
-        if v.get("valid"):
-            st.success(f"✅ {v.get('plan_name', '')} | {v.get('remaining_info', '')}")
-            if v.get("expires_at"):
-                st.caption(f"到期时间：{v['expires_at']}")
-        else:
-            st.error(v.get("message", "卡密无效"))
+    # 已激活的卡密每次刷新重新验证（更新剩余次数）
+    if st.session_state.get("card_key") and not activate_btn:
+        result = key_manager.validate_key(st.session_state["card_key"])
+        st.session_state["key_validation"] = result
+
+    v = st.session_state.get("key_validation")
+    if v and v.get("valid"):
+        st.success(f"✅ {v.get('plan_name', '')} | {v.get('remaining_info', '')}")
+        if v.get("expires_at"):
+            st.caption(f"到期时间：{v['expires_at']}")
+    elif v and not v.get("valid"):
+        st.error(v.get("message", "卡密无效"))
     else:
         st.info("🔓 输入卡密解锁脚本生成等付费功能")
-        st.session_state["key_validation"] = None
 
     st.divider()
 
