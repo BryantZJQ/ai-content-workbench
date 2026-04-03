@@ -45,7 +45,7 @@ st.markdown("""
         padding: 1.5rem 0 0.3rem 0;
     }
     .main-title h1 {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 50%, #7dd3fc 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-size: 2.6rem;
@@ -99,7 +99,7 @@ st.markdown("""
     }
     .stTabs [aria-selected="true"] {
         background: white !important;
-        color: #6366f1 !important;
+        color: #0ea5e9 !important;
         font-weight: 600 !important;
         box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
@@ -113,19 +113,19 @@ st.markdown("""
     /* ========== 按钮 ========== */
     .stButton > button[kind="primary"],
     .stFormSubmitButton > button {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+        background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%) !important;
         border: none !important;
         border-radius: 10px !important;
         padding: 0.6rem 1.5rem !important;
         font-weight: 600 !important;
         font-size: 0.95rem !important;
         letter-spacing: 0.02em;
-        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35) !important;
+        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35) !important;
         transition: all 0.25s ease !important;
     }
     .stButton > button[kind="primary"]:hover,
     .stFormSubmitButton > button:hover {
-        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
+        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5) !important;
         transform: translateY(-1px) !important;
     }
     .stButton > button:not([kind="primary"]) {
@@ -135,9 +135,9 @@ st.markdown("""
         transition: all 0.2s ease !important;
     }
     .stButton > button:not([kind="primary"]):hover {
-        border-color: #6366f1 !important;
-        color: #6366f1 !important;
-        background: #f5f3ff !important;
+        border-color: #0ea5e9 !important;
+        color: #0ea5e9 !important;
+        background: #f0f9ff !important;
     }
 
     /* ========== 输入框/表单 ========== */
@@ -151,8 +151,8 @@ st.markdown("""
     }
     .stTextInput > div > div > input:focus,
     .stTextArea > div > div > textarea:focus {
-        border-color: #6366f1 !important;
-        box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
+        border-color: #0ea5e9 !important;
+        box-shadow: 0 0 0 3px rgba(14,165,233,0.1) !important;
     }
 
     /* ========== 指标卡片 ========== */
@@ -224,12 +224,12 @@ st.markdown("""
         border-radius: 10px !important;
     }
     section[data-testid="stSidebar"] .stTextInput > div > div > input:focus {
-        border-color: #818cf8 !important;
-        box-shadow: 0 0 0 3px rgba(129,140,248,0.15) !important;
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 0 3px rgba(56,189,248,0.15) !important;
     }
     section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%) !important;
-        box-shadow: 0 4px 14px rgba(129, 140, 248, 0.3) !important;
+        background: linear-gradient(135deg, #38bdf8 0%, #7dd3fc 100%) !important;
+        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3) !important;
     }
     section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]) {
         border-color: rgba(255,255,255,0.15) !important;
@@ -237,9 +237,9 @@ st.markdown("""
         background: transparent !important;
     }
     section[data-testid="stSidebar"] .stButton > button:not([kind="primary"]):hover {
-        border-color: #818cf8 !important;
-        color: #818cf8 !important;
-        background: rgba(129,140,248,0.08) !important;
+        border-color: #38bdf8 !important;
+        color: #38bdf8 !important;
+        background: rgba(56,189,248,0.08) !important;
     }
     section[data-testid="stSidebar"] .stAlert {
         background: rgba(255,255,255,0.05) !important;
@@ -267,10 +267,10 @@ st.markdown("""
         background: #f8fafc !important;
     }
     .stDownloadButton > button:hover {
-        border-color: #6366f1 !important;
-        color: #6366f1 !important;
-        background: #f5f3ff !important;
-        box-shadow: 0 2px 8px rgba(99,102,241,0.12) !important;
+        border-color: #0ea5e9 !important;
+        color: #0ea5e9 !important;
+        background: #f0f9ff !important;
+        box-shadow: 0 2px 8px rgba(14,165,233,0.12) !important;
     }
 
     /* ========== Code 块 ========== */
@@ -282,14 +282,14 @@ st.markdown("""
     /* ========== 自定义组件 ========== */
     .score-badge {
         display: inline-block;
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        background: linear-gradient(135deg, #0ea5e9, #38bdf8);
         color: white;
         padding: 3px 12px;
         border-radius: 20px;
         font-weight: 600;
         font-size: 0.85rem;
         letter-spacing: 0.02em;
-        box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+        box-shadow: 0 2px 8px rgba(14,165,233,0.25);
     }
     .hot-badge {
         display: inline-block;
@@ -400,7 +400,7 @@ def _premium_gate(feature_name: str) -> bool:
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center;padding:0.5rem 0 0.2rem 0;">
-        <span style="font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);
+        <span style="font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#38bdf8,#7dd3fc);
         -webkit-background-clip:text;-webkit-text-fill-color:transparent;">🎬 AI 工作台</span>
         <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;letter-spacing:0.1em;">SHORT VIDEO CONTENT STUDIO</div>
     </div>
@@ -495,13 +495,13 @@ with st.sidebar:
     st.markdown("""
     <div style="font-size:0.85rem;line-height:2;">
     <span style="color:#34d399;">●</span> <b>热搜榜单</b> <span style="background:rgba(52,211,153,0.15);color:#34d399;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">免费</span><br>
-    <span style="color:#818cf8;">●</span> <b>智能选题</b><br>
-    <span style="color:#818cf8;">●</span> <b>脚本生成</b> <span style="color:#64748b;font-size:0.75rem;">12种风格</span><br>
-    <span style="color:#818cf8;">●</span> <b>分镜提示词</b><br>
-    <span style="color:#818cf8;">●</span> <b>一键出片</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">推荐</span><br>
-    <span style="color:#818cf8;">●</span> <b>爆款拆解</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span><br>
-    <span style="color:#818cf8;">●</span> <b>标题优化</b><br>
-    <span style="color:#818cf8;">●</span> <b>脚本诊断</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span>
+    <span style="color:#38bdf8;">●</span> <b>智能选题</b><br>
+    <span style="color:#38bdf8;">●</span> <b>脚本生成</b> <span style="color:#64748b;font-size:0.75rem;">12种风格</span><br>
+    <span style="color:#38bdf8;">●</span> <b>分镜提示词</b><br>
+    <span style="color:#38bdf8;">●</span> <b>一键出片</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">推荐</span><br>
+    <span style="color:#38bdf8;">●</span> <b>爆款拆解</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span><br>
+    <span style="color:#38bdf8;">●</span> <b>标题优化</b><br>
+    <span style="color:#38bdf8;">●</span> <b>脚本诊断</b> <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">独家</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -534,16 +534,16 @@ st.markdown('<div class="subtitle">选题 · 脚本 · 分镜 — 一站搞定�
 # ============================================================
 if not _check_premium():
     st.markdown("""
-<div style="background:linear-gradient(135deg,rgba(99,102,241,0.04),rgba(139,92,246,0.06));
-border:1px solid rgba(99,102,241,0.15);border-radius:16px;padding:2rem 2.5rem;margin-bottom:2rem;
-box-shadow:0 4px 24px rgba(99,102,241,0.06);">
+<div style="background:linear-gradient(135deg,rgba(14,165,233,0.04),rgba(56,189,248,0.06));
+border:1px solid rgba(14,165,233,0.15);border-radius:16px;padding:2rem 2.5rem;margin-bottom:2rem;
+box-shadow:0 4px 24px rgba(14,165,233,0.06);">
 
 <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
 <span style="font-size:1.3rem;">👋</span>
 <span style="font-size:1.15rem;font-weight:700;color:#1e293b;">欢迎使用 AI 短视频内容工作台</span>
 </div>
 
-<div style="color:#64748b;font-size:0.92rem;margin-bottom:1.2rem;">输入卡密即可解锁以下 <b style="color:#6366f1;">7 项 AI 功能</b>，5分钟产出一条视频的全套文案：</div>
+<div style="color:#64748b;font-size:0.92rem;margin-bottom:1.2rem;">输入卡密即可解锁以下 <b style="color:#0ea5e9;">7 项 AI 功能</b>，5分钟产出一条视频的全套文案：</div>
 
 | 功能 | 说明 | 效果 |
 |------|------|------|
