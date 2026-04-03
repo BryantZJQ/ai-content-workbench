@@ -194,20 +194,21 @@ st.markdown("""
     /* ========== 按钮 ========== */
     .stButton > button[kind="primary"],
     .stFormSubmitButton > button {
-        background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%) !important;
-        border: none !important;
+        background: linear-gradient(135deg, rgba(14,165,233,0.85) 0%, rgba(56,189,248,0.8) 100%) !important;
+        border: 1px solid rgba(14,165,233,0.3) !important;
         border-radius: 10px !important;
         padding: 0.55rem 1.4rem !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
         letter-spacing: 0.03em;
-        box-shadow: 0 2px 8px rgba(14,165,233,0.25) !important;
+        box-shadow: 0 2px 10px rgba(14,165,233,0.2) !important;
+        backdrop-filter: blur(6px) !important;
         transition: all 0.2s ease !important;
     }
     .stButton > button[kind="primary"]:hover,
     .stFormSubmitButton > button:hover {
-        background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%) !important;
-        box-shadow: 0 4px 14px rgba(14,165,233,0.3) !important;
+        background: linear-gradient(135deg, rgba(2,132,199,0.9) 0%, rgba(14,165,233,0.85) 100%) !important;
+        box-shadow: 0 4px 16px rgba(14,165,233,0.3) !important;
         transform: translateY(-1px) !important;
     }
     .stButton > button:not([kind="primary"]) {
@@ -243,14 +244,15 @@ st.markdown("""
 
     /* ========== MultiSelect 标签 ========== */
     .stMultiSelect [data-baseweb="tag"] {
-        background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
-        border: none !important;
+        background: linear-gradient(135deg, rgba(14,165,233,0.75), rgba(56,189,248,0.7)) !important;
+        border: 1px solid rgba(14,165,233,0.2) !important;
         border-radius: 6px !important;
         color: #ffffff !important;
         font-weight: 500 !important;
         font-size: 0.82rem !important;
         padding: 2px 8px !important;
-        box-shadow: 0 1px 4px rgba(14,165,233,0.2);
+        box-shadow: 0 1px 4px rgba(14,165,233,0.15);
+        backdrop-filter: blur(4px);
     }
     .stMultiSelect [data-baseweb="tag"] span {
         color: #ffffff !important;
