@@ -413,7 +413,7 @@ def _premium_gate(feature_name: str) -> bool:
     """付费功能门控，无权限时显示提示并返回False"""
     if _check_premium():
         return True
-    st.warning(f"🔒 **{feature_name}** 为付费功能，请在左侧边栏输入卡密解锁")
+    st.warning(f"**{feature_name}** 为付费功能，请在左侧边栏输入卡密解锁")
     st.markdown("""
     **获取卡密：**
     - 试用卡（3次免费体验）
@@ -427,7 +427,7 @@ with st.sidebar:
     st.markdown("""
     <div style="text-align:center;padding:0.5rem 0 0.2rem 0;">
         <span style="font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#38bdf8,#7dd3fc);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;">🎬 AI 工作台</span>
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;">AI 工作台</span>
         <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;letter-spacing:0.1em;">SHORT VIDEO CONTENT STUDIO</div>
     </div>
     """, unsafe_allow_html=True)
@@ -435,7 +435,7 @@ with st.sidebar:
     st.divider()
 
     # === 卡密验证 ===
-    st.markdown("### 🔑 卡密")
+    st.markdown("### 卡密")
 
     # 从URL参数恢复卡密（刷新后不丢失，加密存储）
     _params = st.query_params
@@ -464,7 +464,7 @@ with st.sidebar:
             if v.get("expires_at") and not v.get("total_limit"):
                 st.caption(f"到期时间：{v['expires_at']}")
             # 切换按钮
-            if st.button("🔄 切换卡密", use_container_width=True):
+            if st.button("切换卡密", use_container_width=True):
                 st.session_state.pop("card_key", None)
                 st.session_state.pop("key_validation", None)
                 if "t" in st.query_params:
@@ -473,7 +473,7 @@ with st.sidebar:
         else:
             st.error(v.get("message", "卡密无效"))
             # 过期/失效自动解锁输入框
-            if st.button("🔓 更换卡密", type="primary", use_container_width=True):
+            if st.button("更换卡密", type="primary", use_container_width=True):
                 st.session_state.pop("card_key", None)
                 st.session_state.pop("key_validation", None)
                 if "t" in st.query_params:
@@ -489,7 +489,7 @@ with st.sidebar:
             help="输入卡密解锁全部功能",
         )
 
-        if st.button("🔓 激活卡密", type="primary", use_container_width=True):
+        if st.button("激活卡密", type="primary", use_container_width=True):
             if input_card_key:
                 result = key_manager.validate_key(input_card_key)
                 if result.get("valid"):
@@ -503,7 +503,7 @@ with st.sidebar:
                 st.warning("请先输入卡密")
 
         st.session_state["key_validation"] = None
-        st.info("🔓 输入卡密解锁脚本生成等付费功能")
+        st.info("输入卡密解锁脚本生成等付费功能")
 
     st.divider()
 
@@ -517,7 +517,7 @@ with st.sidebar:
     if _api_key:
         os.environ["DEEPSEEK_API_KEY"] = _api_key
 
-    st.markdown("### 📊 功能导航")
+    st.markdown("### 功能导航")
     st.markdown("""
     <div style="font-size:0.85rem;line-height:2;">
     <span style="color:#34d399;">●</span> <b>热搜榜单</b> <span style="background:rgba(52,211,153,0.15);color:#34d399;padding:1px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">免费</span><br>
@@ -544,7 +544,7 @@ with st.sidebar:
     st.markdown("""
     <div style="text-align:center;padding:0.2rem 0;">
         <div style="font-size:0.7rem;color:#475569;letter-spacing:0.05em;">Powered by DeepSeek AI</div>
-        <div style="font-size:0.65rem;color:#334155;margin-top:2px;">v1.0 · Made with ❤️</div>
+        <div style="font-size:0.65rem;color:#334155;margin-top:2px;">v1.0</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -552,7 +552,7 @@ with st.sidebar:
 # ============================================================
 # 标题
 # ============================================================
-st.markdown('<div class="main-title"><h1>🎬 AI短视频内容工作台</h1></div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title"><h1>AI短视频内容工作台</h1></div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">选题 · 脚本 · 分镜 — 一站搞定，5分钟产出一条视频的全部文案</div>', unsafe_allow_html=True)
 
 # ============================================================
@@ -565,7 +565,6 @@ border:1px solid rgba(14,165,233,0.15);border-radius:16px;padding:2rem 2.5rem;ma
 box-shadow:0 4px 24px rgba(14,165,233,0.06);">
 
 <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
-<span style="font-size:1.3rem;">👋</span>
 <span style="font-size:1.15rem;font-weight:700;color:#1e293b;">欢迎使用 AI 短视频内容工作台</span>
 </div>
 
@@ -573,17 +572,17 @@ box-shadow:0 4px 24px rgba(14,165,233,0.06);">
 
 | 功能 | 说明 | 效果 |
 |------|------|------|
-| 🎯 **智能选题** | 热搜 + AI 联想 + 智能打分 | 30秒找到高潜力选题 |
-| 📝 **脚本生成** | 12种风格，自动写完整配音稿 | 1分钟出完整脚本 |
-| 🎬 **分镜提示词** | 自动生成可灵/Pika提示词 | 直接复制到AI视频工具 |
-| 🚀 **一键出片** | 选题→脚本→分镜全自动 | 5分钟搞定全套文案 |
-| 🔍 **爆款拆解** | 逆向分析爆款文案结构 | 学会"为什么能火" |
-| 🏷️ **标题优化** | AI生成+对比标题点击率 | 选出最强标题 |
-| 📊 **脚本诊断** | 六维评分+完播率预测 | 发布前精准优化 |
+| **智能选题** | 热搜 + AI 联想 + 智能打分 | 30秒找到高潜力选题 |
+| **脚本生成** | 12种风格，自动写完整配音稿 | 1分钟出完整脚本 |
+| **分镜提示词** | 自动生成可灵/Pika提示词 | 直接复制到AI视频工具 |
+| **一键出片** | 选题→脚本→分镜全自动 | 5分钟搞定全套文案 |
+| **爆款拆解** | 逆向分析爆款文案结构 | 学会"为什么能火" |
+| **标题优化** | AI生成+对比标题点击率 | 选出最强标题 |
+| **脚本诊断** | 六维评分+完播率预测 | 发布前精准优化 |
 
 <div style="margin-top:1rem;padding:0.75rem 1rem;background:rgba(52,211,153,0.08);border-radius:10px;
 border:1px solid rgba(52,211,153,0.2);font-size:0.9rem;">
-🔥 <b style="color:#059669;">热搜榜单完全免费</b>，无需卡密！← 左侧输入卡密解锁全部 AI 功能
+<b style="color:#059669;">热搜榜单完全免费</b>，无需卡密！← 左侧输入卡密解锁全部 AI 功能
 </div>
 
 </div>
@@ -593,8 +592,8 @@ border:1px solid rgba(52,211,153,0.2);font-size:0.9rem;">
 # 主体 Tabs
 # ============================================================
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
-    "🔥 热搜榜单", "🎯 智能选题", "📝 脚本生成", "🎬 分镜提示词",
-    "🚀 一键出片", "🔍 爆款拆解", "🏷️ 标题优化", "📊 脚本诊断",
+    "热搜榜单", "智能选题", "脚本生成", "分镜提示词",
+    "一键出片", "爆款拆解", "标题优化", "脚本诊断",
 ])
 
 
@@ -609,11 +608,11 @@ with tab1:
             "选择平台",
             ["douyin", "bilibili", "weibo", "baidu"],
             default=["douyin", "bilibili", "weibo", "baidu"],
-            format_func=lambda x: {"douyin": "🎵 抖音", "bilibili": "📺 B站", "weibo": "💬 微博", "baidu": "🔍 百度"}[x],
+            format_func=lambda x: {"douyin": "抖音", "bilibili": "B站", "weibo": "微博", "baidu": "百度"}[x],
         )
     with col2:
         st.markdown("<br>", unsafe_allow_html=True)
-        fetch_btn = st.button("🔍 抓取热搜", type="primary", use_container_width=True)
+        fetch_btn = st.button("抓取热搜", type="primary", use_container_width=True)
 
     if fetch_btn:
         with st.spinner("正在抓取各平台热搜..."):
@@ -628,7 +627,7 @@ with tab1:
     if "hot_topics" in st.session_state and st.session_state["hot_topics"]:
         results = st.session_state["hot_topics"]
 
-        source_map = {"douyin": "🎵 抖音", "bilibili": "📺 B站", "weibo": "💬 微博", "baidu": "🔍 百度"}
+        source_map = {"douyin": "抖音", "bilibili": "B站", "weibo": "微博", "baidu": "百度"}
         source_colors = {"douyin": "#000000", "bilibili": "#00a1d6", "weibo": "#ff8200", "baidu": "#2932e1"}
 
         # 按平台分列展示
@@ -663,17 +662,17 @@ with tab2:
     with st.form("topic_form"):
         col1, col2, col3 = st.columns(3)
         with col1:
-            track = st.text_input("📌 内容赛道", placeholder="如：历史、科技、美食、育儿", key="topic_track")
+            track = st.text_input("内容赛道", placeholder="如：历史、科技、美食、育儿", key="topic_track")
         with col2:
-            seeds = st.text_input("🌱 种子关键词（可选）", placeholder="逗号分隔，如：朱元璋,明朝", key="topic_seeds")
+            seeds = st.text_input("种子关键词（可选）", placeholder="逗号分隔，如：朱元璐,明朝", key="topic_seeds")
         with col3:
-            topic_count = st.slider("📊 推荐数量", 5, 30, 10, key="topic_count")
+            topic_count = st.slider("推荐数量", 5, 30, 10, key="topic_count")
 
         col_a, col_b = st.columns([1, 1])
         with col_a:
             use_hot = st.checkbox("结合实时热搜", value=True, key="topic_use_hot")
         with col_b:
-            topic_btn = st.form_submit_button("🎯 开始选题", type="primary", use_container_width=True)
+            topic_btn = st.form_submit_button("开始选题", type="primary", use_container_width=True)
 
     if topic_btn:
         if not _premium_gate("智能选题"):
@@ -686,14 +685,14 @@ with tab2:
                     all_topics = []
 
                     if use_hot:
-                        st.write("📡 抓取实时热搜...")
+                        st.write("抓取实时热搜...")
                         hot = topic_engine.fetch_hot_topics()
                         hot_titles = [h["title"] for h in hot if h["title"]]
                         all_topics.extend(hot_titles)
                         st.write(f"✅ 获取 {len(hot_titles)} 条热搜")
 
                     if seed_list:
-                        st.write("🧠 AI联想扩展关键词...")
+                        st.write("AI联想扩展关键词...")
                         expanded = topic_engine.expand_topics(
                             seed_list, count=topic_count * 2, track=track
                         )
@@ -701,11 +700,11 @@ with tab2:
                         st.write(f"✅ 扩展出 {len(expanded)} 个候选选题")
 
                     if all_topics:
-                        st.write("🔄 去重过滤...")
+                        st.write("去重过滤...")
                         unique = topic_engine.deduplicate(all_topics)
                         st.write(f"✅ 去重后 {len(unique)} 个")
 
-                        st.write("⚖️ AI智能打分排序...")
+                        st.write("AI智能打分排序...")
                         scored = topic_engine.score_topics(unique[:30], track=track)
                         scored = scored[:topic_count]
                         st.write(f"✅ 筛选出 Top {len(scored)} 选题")
@@ -725,7 +724,7 @@ with tab2:
     if "scored_topics" in st.session_state and st.session_state["scored_topics"]:
         results = st.session_state["scored_topics"]
         st.markdown("---")
-        st.markdown(f"#### 🏆 Top {len(results)} 选题推荐")
+        st.markdown(f"#### Top {len(results)} 选题推荐")
 
         for i, item in enumerate(results, 1):
             score = item.get("score", 0)
@@ -747,7 +746,7 @@ with tab2:
                 with c1:
                     st.markdown(f"**{i}. {topic_text}**")
                     if reason:
-                        st.caption(f"💡 {reason}")
+                        st.caption(reason)
                 with c2:
                     st.markdown(f'<span style="background:{color};color:white;padding:4px 12px;border-radius:12px;font-weight:bold;">{score}分 {label}</span>', unsafe_allow_html=True)
                 st.divider()
@@ -760,7 +759,7 @@ with tab3:
 
     # 如果有智能选题结果，提供快捷选择（放在form外面，因为含st.button）
     if "scored_topics" in st.session_state and st.session_state["scored_topics"]:
-        with st.expander("💡 从智能选题结果中选择"):
+        with st.expander("从智能选题结果中选择"):
             topic_names = [item.get("topic", "") for item in st.session_state["scored_topics"]]
             selected = st.radio("选择一个选题：", topic_names, key="quick_topic")
             if st.button("使用该选题", key="use_topic_btn"):
@@ -769,7 +768,7 @@ with tab3:
 
     with st.form("script_form"):
         script_topic = st.text_input(
-            "📌 输入选题",
+            "输入选题",
             placeholder="如：为什么故宫屋顶没有鸟粪",
             key="script_topic",
         )
@@ -779,7 +778,7 @@ with tab3:
             style_options = [s["name"] for s in script_gen.list_styles()]
             style_descriptions = {s["name"]: s["description"] for s in script_gen.list_styles()}
             script_style = st.selectbox(
-                "🎨 脚本风格",
+                "脚本风格",
                 style_options,
                 index=0,
                 help="\n".join([f"• {k}: {v}" for k, v in style_descriptions.items()]),
@@ -787,11 +786,11 @@ with tab3:
             )
         with col_b:
             platform_options = [p["name"] for p in script_gen.list_platforms()]
-            script_platform = st.selectbox("📱 目标平台", platform_options, index=0, key="script_platform")
+            script_platform = st.selectbox("目标平台", platform_options, index=0, key="script_platform")
         with col_c:
-            script_duration = st.slider("⏱️ 目标时长（秒）", 15, 300, 60, step=15, key="script_duration")
+            script_duration = st.slider("目标时长（秒）", 15, 300, 60, step=15, key="script_duration")
 
-        script_btn = st.form_submit_button("📝 生成脚本", type="primary", use_container_width=True)
+        script_btn = st.form_submit_button("生成脚本", type="primary", use_container_width=True)
 
     if script_btn:
         if not _premium_gate("脚本生成"):
@@ -821,33 +820,33 @@ with tab3:
 
         # 元信息行
         meta_cols = st.columns(4)
-        meta_cols[0].metric("📌 标题", result.get("title", ""))
-        meta_cols[1].metric("✍️ 字数", f"{result.get('word_count', 0)} 字")
-        meta_cols[2].metric("⏱️ 预估时长", f"{result.get('estimated_duration_seconds', 0)} 秒")
-        meta_cols[3].metric("🎨 风格", result.get("style", ""))
+        meta_cols[0].metric("标题", result.get("title", ""))
+        meta_cols[1].metric("字数", f"{result.get('word_count', 0)} 字")
+        meta_cols[2].metric("预估时长", f"{result.get('estimated_duration_seconds', 0)} 秒")
+        meta_cols[3].metric("风格", result.get("style", ""))
 
-        st.markdown("#### 📄 完整脚本")
+        st.markdown("#### 完整脚本")
 
         # 分段展示
         if result.get("hook"):
-            st.markdown("**🎣 开场钩子**")
+            st.markdown("**开场钩子**")
             st.info(result["hook"])
 
         if result.get("body"):
-            st.markdown("**📖 正文主体**")
+            st.markdown("**正文主体**")
             st.success(result["body"])
 
         if result.get("cta"):
-            st.markdown("**📢 结尾引导**")
+            st.markdown("**结尾引导**")
             st.warning(result["cta"])
 
         # 复制全文 + 下载
-        st.markdown("#### 📋 一键复制")
+        st.markdown("#### 一键复制")
         st.code(result.get("full_script", ""), language=None)
         _script_text = result.get("full_script", "")
         _script_title = result.get("title", "脚本")
         st.download_button(
-            "⬇️ 下载脚本",
+            "下载脚本",
             data=_script_text,
             file_name=f"{_script_title}.txt",
             mime="text/plain",
@@ -855,10 +854,10 @@ with tab3:
         )
 
         # 跨Tab联动：一键跳转诊断
-        if st.button("🔍 立即诊断这个脚本", use_container_width=True, key="script_to_diag"):
+        if st.button("立即诊断这个脚本", use_container_width=True, key="script_to_diag"):
             st.session_state["_diag_original_script"] = _script_text
             st.session_state["_diag_platform"] = result.get("platform", "通用")
-            st.info("💡 请切换到「📊 脚本诊断」Tab，脚本已自动填入")
+            st.info("请切换到「脚本诊断」Tab，脚本已自动填入")
 
 
 # ===== Tab4: 分镜生成 =====
@@ -880,17 +879,17 @@ with tab4:
         vc_script = prev.get("full_script", "")
         vc_duration = prev.get("estimated_duration_seconds", 60)
         vc_platform = prev.get("platform", "通用")
-        vc_btn = st.button("🎬 生成分镜", type="primary", use_container_width=True)
+        vc_btn = st.button("生成分镜", type="primary", use_container_width=True)
     else:
         with st.form("visual_cue_form"):
             vc_topic = st.text_input("选题", placeholder="视频选题", key="vc_topic")
             vc_script = st.text_area("脚本内容", placeholder="粘贴你的完整脚本文案...", height=200, key="vc_script")
             vc_col1, vc_col2 = st.columns(2)
             with vc_col1:
-                vc_duration = st.number_input("⏱️ 时长（秒）", min_value=10, max_value=600, value=60, key="vc_duration")
+                vc_duration = st.number_input("时长（秒）", min_value=10, max_value=600, value=60, key="vc_duration")
             with vc_col2:
-                vc_platform = st.selectbox("📱 目标平台", ["通用", "抖音", "B站", "小红书"], key="vc_platform")
-            vc_btn = st.form_submit_button("🎬 生成分镜", type="primary", use_container_width=True)
+                vc_platform = st.selectbox("目标平台", ["通用", "抖音", "B站", "小红书"], key="vc_platform")
+            vc_btn = st.form_submit_button("生成分镜", type="primary", use_container_width=True)
 
     if vc_btn:
         if not _premium_gate("分镜生成"):
@@ -916,33 +915,33 @@ with tab4:
     if "visual_cues" in st.session_state and st.session_state["visual_cues"]:
         cues = st.session_state["visual_cues"]
         st.markdown("---")
-        st.markdown(f"#### 🎬 共 {len(cues)} 个分镜")
+        st.markdown(f"#### 共 {len(cues)} 个分镜")
 
         for shot in cues:
             shot_num = shot.get("shot_number", "?")
             timestamp = shot.get("timestamp", "")
 
-            with st.expander(f"🎞️ 镜头 {shot_num}  |  {timestamp}", expanded=True):
+            with st.expander(f"镜头 {shot_num}  |  {timestamp}", expanded=True):
                 if shot.get("narration"):
-                    st.markdown(f"**🎙️ 配音：** {shot['narration']}")
+                    st.markdown(f"**配音：** {shot['narration']}")
 
                 if shot.get("scene"):
-                    st.markdown(f"**🎬 画面：** {shot['scene']}")
+                    st.markdown(f"**画面：** {shot['scene']}")
 
                 if shot.get("camera"):
-                    st.markdown(f"**📷 镜头：** {shot['camera']}")
+                    st.markdown(f"**镜头：** {shot['camera']}")
 
                 if shot.get("style"):
-                    st.markdown(f"**🎨 风格：** {shot['style']}")
+                    st.markdown(f"**风格：** {shot['style']}")
 
                 col_cn, col_en = st.columns(2)
                 with col_cn:
                     if shot.get("prompt_cn"):
-                        st.markdown("**🇨🇳 中文提示词（可灵/Vidu）**")
+                        st.markdown("**中文提示词（可灵/Vidu）**")
                         st.code(shot["prompt_cn"], language=None)
                 with col_en:
                     if shot.get("prompt_en"):
-                        st.markdown("**🇺🇸 英文提示词（Pika/Runway）**")
+                        st.markdown("**英文提示词（Pika/Runway）**")
                         st.code(shot["prompt_en"], language=None)
 
         # 分镜一键导出
@@ -959,7 +958,7 @@ with tab4:
                 _export_lines.append(f"英文提示词：{shot['prompt_en']}")
             _export_lines.append("")
         st.download_button(
-            "⬇️ 下载全部分镜",
+            "下载全部分镜",
             data="\n".join(_export_lines),
             file_name="分镜提示词.txt",
             mime="text/plain",
@@ -968,17 +967,17 @@ with tab4:
 
         # 使用指南
         st.markdown("---")
-        st.markdown("#### 📖 下一步：用提示词生成AI视频")
+        st.markdown("#### 下一步：用提示词生成AI视频")
         st.markdown("""
 提示词已就绪！复制上方提示词，粘贴到以下任一AI视频工具即可生成画面：
 
 | 工具 | 语言 | 特点 | 链接 |
 |------|------|------|------|
-| **可灵** | 🇨🇳 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
-| **Vidu** | 🇨🇳 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
-| **Pika** | 🇺🇸 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
-| **Runway** | 🇺🇸 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
-| **即梦** | 🇨🇳 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
+| **可灵** | 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
+| **Vidu** | 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
+| **Pika** | 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
+| **Runway** | 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
+| **即梦** | 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
 
 **操作步骤：**
 1. 复制对应语言的提示词（中文→可灵/Vidu/即梦，英文→Pika/Runway）
@@ -992,12 +991,12 @@ with tab4:
 with tab5:
     st.markdown("""
 <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;padding:1.2rem 1.5rem;margin-bottom:1.2rem;">
-<div style="font-size:1.1rem;font-weight:700;color:#0c4a6e;">🚀 一键出片 — 全自动流水线</div>
+<div style="font-size:1.1rem;font-weight:700;color:#0c4a6e;">一键出片 — 全自动流水线</div>
 <div style="color:#64748b;font-size:0.88rem;margin-top:4px;">输入赛道 + 关键词 → AI 自动完成 <b style="color:#0369a1;">选题 → 脚本 → 分镜</b> 全流程，一步到位</div>
 <div style="display:flex;gap:1.5rem;margin-top:0.6rem;font-size:0.78rem;color:#94a3b8;">
-<span>📌 Step 1 智能选题</span><span style="color:#cbd5e1;">→</span>
-<span>📝 Step 2 脚本生成</span><span style="color:#cbd5e1;">→</span>
-<span>🎬 Step 3 分镜提示词</span>
+<span>Step 1 智能选题</span><span style="color:#cbd5e1;">→</span>
+<span>Step 2 脚本生成</span><span style="color:#cbd5e1;">→</span>
+<span>Step 3 分镜提示词</span>
 </div>
 </div>
 """, unsafe_allow_html=True)
@@ -1005,21 +1004,21 @@ with tab5:
     with st.form("oneclick_form"):
         op_col1, op_col2 = st.columns(2)
         with op_col1:
-            op_track = st.text_input("📌 内容赛道", placeholder="如：历史、科技、美食", key="op_track")
+            op_track = st.text_input("内容赛道", placeholder="如：历史、科技、美食", key="op_track")
         with op_col2:
-            op_seeds = st.text_input("🌱 种子关键词", placeholder="逗号分隔，如：朱元璋,明朝", key="op_seeds")
+            op_seeds = st.text_input("种子关键词", placeholder="逗号分隔，如：朱元璋,明朝", key="op_seeds")
 
         op_col_a, op_col_b, op_col_c = st.columns(3)
         with op_col_a:
             op_style_options = [s["name"] for s in script_gen.list_styles()]
-            op_style = st.selectbox("🎨 脚本风格", op_style_options, index=0, key="op_style")
+            op_style = st.selectbox("脚本风格", op_style_options, index=0, key="op_style")
         with op_col_b:
             op_platform_options = [p["name"] for p in script_gen.list_platforms()]
-            op_platform = st.selectbox("📱 目标平台", op_platform_options, index=0, key="op_platform")
+            op_platform = st.selectbox("目标平台", op_platform_options, index=0, key="op_platform")
         with op_col_c:
-            op_duration = st.slider("⏱️ 目标时长（秒）", 15, 300, 60, step=15, key="op_duration")
+            op_duration = st.slider("目标时长（秒）", 15, 300, 60, step=15, key="op_duration")
 
-        op_btn = st.form_submit_button("🚀 一键生成全部", type="primary", use_container_width=True)
+        op_btn = st.form_submit_button("一键生成全部", type="primary", use_container_width=True)
 
     if op_btn:
         if not _premium_gate("一键出片"):
@@ -1033,15 +1032,15 @@ with tab5:
                 op_seed_list.insert(0, op_track)
             op_result = {}
 
-            with st.status("🚀 一键出片流水线启动...", expanded=True) as op_status:
+            with st.status("一键出片流水线启动...", expanded=True) as op_status:
                 try:
                     # Step 1: 智能选题（用户输入优先，热搜仅作补充）
-                    st.write("**Step 1/3** — 📡 智能选题...")
+                    st.write("**Step 1/3** 智能选题...")
                     all_topics = []
 
                     # 用户关键词优先：扩展更多候选
                     if op_seed_list:
-                        st.write("  🧠 基于你的关键词AI联想扩展...")
+                        st.write("基于关键词AI联想扩展...")
                         expanded = topic_engine.expand_topics(
                             op_seed_list, count=25, track=op_track
                         )
@@ -1049,7 +1048,7 @@ with tab5:
                         st.write(f"  ✅ 扩展出 {len(expanded)} 个相关选题")
 
                     # 热搜作为补充（最多取10条，避免喧宾夺主）
-                    st.write("  📡 抓取热搜作为灵感补充...")
+                    st.write("抓取热搜作为灵感补充...")
                     hot = topic_engine.fetch_hot_topics()
                     hot_titles = [h["title"] for h in hot if h["title"]][:10]
                     all_topics.extend(hot_titles)
@@ -1064,11 +1063,11 @@ with tab5:
                         st.error("选题失败，请调整关键词重试")
                     else:
                         topic_text = best_topic["topic"]
-                        st.write(f"  🏆 最佳选题：**{topic_text}**（{best_topic.get('score', 0)}分）")
+                        st.write(f"最佳选题：**{topic_text}**（{best_topic.get('score', 0)}分）")
                         op_result["topic"] = best_topic
 
                         # Step 2: 脚本生成
-                        st.write(f"**Step 2/3** — 📝 生成脚本...")
+                        st.write(f"**Step 2/3** 生成脚本...")
                         script_result = script_gen.generate_script(
                             topic=topic_text,
                             style=op_style,
@@ -1079,7 +1078,7 @@ with tab5:
                         st.write(f"  ✅ 脚本 {script_result.get('word_count', 0)} 字")
 
                         # Step 3: 分镜生成
-                        st.write(f"**Step 3/3** — 🎬 生成分镜...")
+                        st.write(f"**Step 3/3** 生成分镜...")
                         cues = script_gen.generate_visual_cues(
                             topic=topic_text,
                             script_text=script_result.get("full_script", ""),
@@ -1105,35 +1104,35 @@ with tab5:
         # 选题结果
         if opr.get("topic"):
             t = opr["topic"]
-            st.markdown(f'#### 🏆 选题：{t["topic"]} <span style="background:#28a745;color:white;padding:2px 10px;border-radius:12px;">{t.get("score", 0)}分</span>', unsafe_allow_html=True)
+            st.markdown(f'#### 选题：{t["topic"]} <span style="background:#28a745;color:white;padding:2px 10px;border-radius:12px;">{t.get("score", 0)}分</span>', unsafe_allow_html=True)
             if t.get("reason"):
-                st.caption(f"💡 {t['reason']}")
+                st.caption(t['reason'])
 
         # 脚本结果
         if opr.get("script"):
             s = opr["script"]
-            st.markdown("#### 📝 脚本")
+            st.markdown("#### 脚本")
             meta_cols = st.columns(4)
-            meta_cols[0].metric("📌 标题", s.get("title", ""))
-            meta_cols[1].metric("✍️ 字数", f"{s.get('word_count', 0)} 字")
-            meta_cols[2].metric("⏱️ 时长", f"{s.get('estimated_duration_seconds', 0)} 秒")
-            meta_cols[3].metric("🎨 风格", s.get("style", ""))
+            meta_cols[0].metric("标题", s.get("title", ""))
+            meta_cols[1].metric("字数", f"{s.get('word_count', 0)} 字")
+            meta_cols[2].metric("时长", f"{s.get('estimated_duration_seconds', 0)} 秒")
+            meta_cols[3].metric("风格", s.get("style", ""))
 
             if s.get("hook"):
-                st.markdown("**🎣 开场钩子**")
+                st.markdown("**开场钩子**")
                 st.info(s["hook"])
             if s.get("body"):
-                st.markdown("**📖 正文主体**")
+                st.markdown("**正文主体**")
                 st.success(s["body"])
             if s.get("cta"):
-                st.markdown("**📢 结尾引导**")
+                st.markdown("**结尾引导**")
                 st.warning(s["cta"])
 
             st.code(s.get("full_script", ""), language=None)
             _op_dl_col, _op_diag_col = st.columns(2)
             with _op_dl_col:
                 st.download_button(
-                    "⬇️ 下载脚本",
+                    "下载脚本",
                     data=s.get("full_script", ""),
                     file_name=f"{s.get('title', '脚本')}.txt",
                     mime="text/plain",
@@ -1141,28 +1140,28 @@ with tab5:
                     key="op_dl_script",
                 )
             with _op_diag_col:
-                if st.button("🔍 诊断这个脚本", use_container_width=True, key="op_to_diag"):
+                if st.button("诊断这个脚本", use_container_width=True, key="op_to_diag"):
                     st.session_state["_diag_original_script"] = s.get("full_script", "")
                     st.session_state["_diag_platform"] = s.get("platform", "通用")
-                    st.info("💡 请切换到「📊 脚本诊断」Tab")
+                    st.info("请切换到「脚本诊断」Tab")
 
         # 分镜结果
         if opr.get("cues"):
-            st.markdown(f"#### 🎬 分镜（共 {len(opr['cues'])} 个）")
+            st.markdown(f"#### 分镜（共 {len(opr['cues'])} 个）")
             for shot in opr["cues"]:
-                with st.expander(f"🎞️ 镜头 {shot.get('shot_number', '?')}  |  {shot.get('timestamp', '')}", expanded=False):
+                with st.expander(f"镜头 {shot.get('shot_number', '?')}  |  {shot.get('timestamp', '')}", expanded=False):
                     if shot.get("narration"):
-                        st.markdown(f"**🎙️ 配音：** {shot['narration']}")
+                        st.markdown(f"**配音：** {shot['narration']}")
                     if shot.get("scene"):
-                        st.markdown(f"**🎬 画面：** {shot['scene']}")
+                        st.markdown(f"**画面：** {shot['scene']}")
                     c1, c2 = st.columns(2)
                     with c1:
                         if shot.get("prompt_cn"):
-                            st.markdown("**🇨🇳 中文提示词**")
+                            st.markdown("**中文提示词**")
                             st.code(shot["prompt_cn"], language=None)
                     with c2:
                         if shot.get("prompt_en"):
-                            st.markdown("**🇺🇸 英文提示词**")
+                            st.markdown("**英文提示词**")
                             st.code(shot["prompt_en"], language=None)
 
             _op_export = []
@@ -1176,7 +1175,7 @@ with tab5:
                     _op_export.append(f"英文提示词：{shot['prompt_en']}")
                 _op_export.append("")
             st.download_button(
-                "⬇️ 下载全部分镜",
+                "下载全部分镜",
                 data="\n".join(_op_export),
                 file_name="一键出片_分镜.txt",
                 mime="text/plain",
@@ -1187,7 +1186,7 @@ with tab5:
         # 一键导出完整文档（脚本+分镜合并）
         if opr.get("script") and opr.get("cues"):
             st.markdown("---")
-            st.markdown("#### 📦 一键导出完整文档")
+            st.markdown("#### 一键导出完整文档")
             _full_doc = []
             _s = opr["script"]
             _full_doc.append(f"{'='*60}")
@@ -1220,7 +1219,7 @@ with tab5:
             _full_doc.append(f"{'='*60}")
             _full_doc.append("由 AI短视频内容工作台 生成")
             st.download_button(
-                "📦 下载完整文档（脚本+分镜）",
+                "下载完整文档（脚本+分镜）",
                 data="\n".join(_full_doc),
                 file_name=f"{_s.get('title', '一键出片')}_完整文档.txt",
                 mime="text/plain",
@@ -1230,17 +1229,17 @@ with tab5:
 
         # 使用指南
         st.markdown("---")
-        st.markdown("#### 📖 下一步：用提示词生成AI视频")
+        st.markdown("#### 下一步：用提示词生成AI视频")
         st.markdown("""
 提示词已就绪！复制上方提示词，粘贴到以下任一AI视频工具即可生成画面：
 
 | 工具 | 语言 | 特点 | 链接 |
 |------|------|------|------|
-| **可灵** | 🇨🇳 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
-| **Vidu** | 🇨🇳 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
-| **Pika** | 🇺🇸 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
-| **Runway** | 🇺🇸 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
-| **即梦** | 🇨🇳 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
+| **可灵** | 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
+| **Vidu** | 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
+| **Pika** | 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
+| **Runway** | 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
+| **即梦** | 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
 
 **操作步骤：**
 1. 复制对应语言的提示词（中文→可灵/Vidu/即梦，英文→Pika/Runway）
@@ -1252,17 +1251,17 @@ with tab5:
 
 # ===== Tab6: 爆款拆解 =====
 with tab6:
-    st.markdown("### 🔍 爆款拆解器")
+    st.markdown("### 爆款拆解器")
     st.caption("粘贴爆款视频文案，AI逆向拆解结构公式，学会「为什么能火」再复制到新选题")
 
     with st.form("viral_form"):
         viral_text = st.text_area(
-            "📋 粘贴爆款视频文案",
+            "粘贴爆款视频文案",
             height=200,
             placeholder="把你看到的爆款视频的配音文案/字幕粘贴到这里...",
             key="viral_text",
         )
-        viral_btn = st.form_submit_button("🔍 开始拆解", type="primary", use_container_width=True)
+        viral_btn = st.form_submit_button("开始拆解", type="primary", use_container_width=True)
 
     if viral_btn:
         if not _premium_gate("爆款拆解"):
@@ -1273,8 +1272,8 @@ with tab6:
             analysis = None
             with st.status("AI正在深度拆解...", expanded=True) as v_status:
                 try:
-                    st.write("🔬 分析文案结构...")
-                    st.write("🧠 提取爆款公式...")
+                    st.write("分析文案结构...")
+                    st.write("提取爆款公式...")
                     analysis = content_analyzer.analyze_viral(viral_text)
                     if analysis.get("error"):
                         v_status.update(label="❌ 拆解失败", state="error")
@@ -1295,50 +1294,51 @@ with tab6:
 
         # 总结
         if a.get("summary"):
-            st.markdown("#### 💡 核心卖点")
+            st.markdown("#### 核心卖点")
             st.info(a["summary"])
 
         # 结构拆解
         if a.get("structure"):
             s = a["structure"]
-            st.markdown("#### 📐 结构拆解")
+            st.markdown("#### 结构拆解")
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.markdown("**🎣 钩子类型**")
+                st.markdown("**钩子类型**")
                 st.success(s.get("hook_type", ""))
                 if s.get("hook_text"):
                     st.caption(f"原文：「{s['hook_text']}」")
                 if s.get("hook_analysis"):
                     st.markdown(f"_{s['hook_analysis']}_")
             with col2:
-                st.markdown("**📖 正文模式**")
+                st.markdown("**正文模式**")
                 st.success(s.get("body_pattern", ""))
                 if s.get("body_analysis"):
                     st.markdown(f"_{s['body_analysis']}_")
             with col3:
-                st.markdown("**🎯 收尾类型**")
+                st.markdown("**收尾类型**")
                 st.success(s.get("cta_type", ""))
                 if s.get("cta_analysis"):
                     st.markdown(f"_{s['cta_analysis']}_")
 
         # 情绪曲线
         if a.get("emotional_arc"):
-            st.markdown("#### 📈 情绪曲线")
+            st.markdown("#### 情绪曲线")
             st.info(a["emotional_arc"])
 
         # 爆款因素
         if a.get("viral_factors"):
-            st.markdown("#### ⚡ 爆款因素")
+            st.markdown("#### 爆款因素")
             for vf in a["viral_factors"]:
                 score = vf.get("score", 0)
-                bar_color = "🟢" if score >= 8 else "🟡" if score >= 6 else "🔴"
-                st.markdown(f"{bar_color} **{vf.get('factor', '')}**（{score}/10）")
+                bar_color = "■" if score >= 8 else "■" if score >= 6 else "■"
+                sc_color = "#28a745" if score >= 8 else "#ffc107" if score >= 6 else "#dc3545"
+                st.markdown(f'<span style="color:{sc_color}">{bar_color}</span> **{vf.get("factor", "")}**（{score}/10）', unsafe_allow_html=True)
                 st.caption(f"证据：{vf.get('evidence', '')}")
 
         # 节奏分析
         if a.get("pacing"):
             p = a["pacing"]
-            st.markdown("#### 🎵 节奏分析")
+            st.markdown("#### 节奏分析")
             pc1, pc2, pc3 = st.columns(3)
             pc1.metric("节奏", p.get("rhythm", ""))
             pc2.metric("句长", p.get("sentence_avg_length", ""))
@@ -1347,7 +1347,7 @@ with tab6:
         # 可复用公式（核心价值）
         if a.get("reusable_formula"):
             f = a["reusable_formula"]
-            st.markdown("#### 🔑 可复用爆款公式")
+            st.markdown("#### 可复用爆款公式")
             st.markdown(f"**公式名称：** {f.get('name', '')}")
             st.markdown(f"**结构模式：** {f.get('pattern', '')}")
             if f.get("steps"):
@@ -1358,14 +1358,14 @@ with tab6:
 
             # 套用公式到新选题
             st.markdown("---")
-            st.markdown("#### 🚀 套用公式到新选题")
+            st.markdown("#### 套用公式到新选题")
             with st.form("apply_formula_form"):
                 new_topic_for_formula = st.text_input(
                     "输入你的新选题",
                     placeholder="如：为什么年轻人不愿意生孩子",
                     key="formula_new_topic",
                 )
-                apply_btn = st.form_submit_button("✨ 用爆款公式生成新脚本", type="primary", use_container_width=True)
+                apply_btn = st.form_submit_button("用爆款公式生成新脚本", type="primary", use_container_width=True)
 
             if apply_btn and new_topic_for_formula:
                 with st.spinner("AI正在套用爆款公式生成脚本..."):
@@ -1376,10 +1376,10 @@ with tab6:
                         st.error(f"生成失败: {e}")
 
             if "formula_script" in st.session_state and st.session_state["formula_script"]:
-                st.markdown("##### 📝 基于爆款公式生成的新脚本")
+                st.markdown("##### 基于爆款公式生成的新脚本")
                 st.code(st.session_state["formula_script"], language=None)
                 st.download_button(
-                    "⬇️ 下载脚本",
+                    "下载脚本",
                     data=st.session_state["formula_script"],
                     file_name="爆款公式脚本.txt",
                     mime="text/plain",
@@ -1389,31 +1389,31 @@ with tab6:
 
         # 改进建议
         if a.get("improvement"):
-            st.markdown("#### 💬 改进建议")
+            st.markdown("#### 改进建议")
             st.warning(a["improvement"])
 
 
 # ===== Tab7: 标题优化 =====
 with tab7:
-    st.markdown("### 🏷️ 标题A/B测试器")
+    st.markdown("### 标题A/B测试器")
     st.caption("标题决定80%的点击率 — AI生成多个标题变体并预测点击率，帮你选出最强标题")
 
     title_mode = st.radio(
         "选择模式",
-        ["🤖 AI生成标题变体", "⚔️ 对比我的标题"],
+        ["AI生成标题变体", "对比我的标题"],
         horizontal=True,
         key="title_mode",
     )
 
-    if title_mode == "🤖 AI生成标题变体":
+    if title_mode == "AI生成标题变体":
         with st.form("title_gen_form"):
             title_topic = st.text_input(
-                "📌 输入选题/主题",
+                "输入选题/主题",
                 placeholder="如：为什么故宫屋顶没有鸟粪",
                 key="title_topic",
             )
             title_script = st.text_area(
-                "📝 脚本内容（可选，提供后标题更精准）",
+                "脚本内容（可选，提供后标题更精准）",
                 height=100,
                 placeholder="粘贴脚本正文，AI会根据内容优化标题...",
                 key="title_script_ref",
@@ -1421,13 +1421,13 @@ with tab7:
             t_col1, t_col2 = st.columns(2)
             with t_col1:
                 title_platform = st.selectbox(
-                    "📱 目标平台",
+                    "目标平台",
                     ["通用", "抖音", "B站", "小红书"],
                     key="title_platform",
                 )
             with t_col2:
-                title_count = st.slider("📊 生成数量", 5, 15, 8, key="title_count")
-            title_gen_btn = st.form_submit_button("🏷️ 生成标题变体", type="primary", use_container_width=True)
+                title_count = st.slider("生成数量", 5, 15, 8, key="title_count")
+            title_gen_btn = st.form_submit_button("生成标题变体", type="primary", use_container_width=True)
 
         if title_gen_btn:
             if not _premium_gate("标题优化"):
@@ -1453,27 +1453,27 @@ with tab7:
         if "title_variants" in st.session_state and st.session_state["title_variants"]:
             variants = st.session_state["title_variants"]
             st.markdown("---")
-            st.markdown(f"#### 🏆 标题变体排行（共 {len(variants)} 个）")
+            st.markdown(f"#### 标题变体排行（共 {len(variants)} 个）")
 
             for i, v in enumerate(variants, 1):
                 score = v.get("score", 0)
                 if score >= 8.5:
-                    medal = "🥇"
+                    medal = "#1"
                     color = "#28a745"
                 elif score >= 7:
-                    medal = "🥈"
+                    medal = "#2"
                     color = "#ffc107"
                 elif score >= 5.5:
-                    medal = "🥉"
+                    medal = "#3"
                     color = "#17a2b8"
                 else:
-                    medal = "　"
+                    medal = ""
                     color = "#6c757d"
 
                 with st.container():
                     tc1, tc2 = st.columns([5, 1])
                     with tc1:
-                        st.markdown(f"**{medal} {i}. {v.get('title', '')}**")
+                        st.markdown(f"**{i}. {v.get('title', '')}**")
                         st.caption(f"策略：{v.get('type', '')} | {v.get('reasoning', '')}")
                     with tc2:
                         st.markdown(
@@ -1489,13 +1489,13 @@ with tab7:
         with st.form("title_compare_form"):
             st.markdown("输入你想对比的标题（每行一个）：")
             user_titles_text = st.text_area(
-                "📋 输入标题（每行一个）",
+                "输入标题（每行一个）",
                 height=150,
                 placeholder="标题1\n标题2\n标题3",
                 key="user_titles",
             )
-            cmp_platform = st.selectbox("📱 目标平台", ["通用", "抖音", "B站", "小红书"], key="cmp_platform")
-            cmp_btn = st.form_submit_button("⚔️ 开始对比", type="primary", use_container_width=True)
+            cmp_platform = st.selectbox("目标平台", ["通用", "抖音", "B站", "小红书"], key="cmp_platform")
+            cmp_btn = st.form_submit_button("开始对比", type="primary", use_container_width=True)
 
         if cmp_btn:
             if not _premium_gate("标题优化"):
@@ -1518,7 +1518,7 @@ with tab7:
         if "title_comparison" in st.session_state and st.session_state["title_comparison"]:
             cmp = st.session_state["title_comparison"]
             st.markdown("---")
-            st.markdown("#### ⚔️ 标题对比结果")
+            st.markdown("#### 标题对比结果")
             for i, item in enumerate(cmp, 1):
                 score = item.get("score", 0)
                 color = "#28a745" if score >= 8 else "#ffc107" if score >= 6 else "#6c757d"
@@ -1526,9 +1526,9 @@ with tab7:
                     cc1, cc2 = st.columns([4, 1])
                     with cc1:
                         st.markdown(f"**{i}. {item.get('title', '')}**")
-                        st.caption(f"✅ {item.get('strengths', '')}　|　❌ {item.get('weaknesses', '')}")
+                        st.caption(f"优势：{item.get('strengths', '')} | 弱点：{item.get('weaknesses', '')}")
                         if item.get("improved"):
-                            st.info(f"💡 优化建议：{item['improved']}")
+                            st.info(f"优化建议：{item['improved']}")
                     with cc2:
                         st.markdown(
                             f'<div style="text-align:center;"><span style="background:{color};color:white;'
@@ -1541,7 +1541,7 @@ with tab7:
 
 # ===== Tab8: 脚本诊断 =====
 with tab8:
-    st.markdown("### 📊 脚本质量诊断")
+    st.markdown("### 脚本质量诊断")
     st.caption("粘贴任意脚本，AI给出完播率预测、节奏分析、互动潜力评估和具体优化建议")
 
     # 从其他Tab联动过来的脚本自动填入
@@ -1551,7 +1551,7 @@ with tab8:
 
     with st.form("diagnose_form"):
         diag_script = st.text_area(
-            "📋 粘贴脚本内容",
+            "粘贴脚本内容",
             value=_prefill_script,
             height=250,
             placeholder="粘贴你写的或AI生成的短视频脚本...",
@@ -1559,10 +1559,10 @@ with tab8:
         )
         d_col1, d_col2 = st.columns(2)
         with d_col1:
-            diag_platform = st.selectbox("📱 目标平台", ["通用", "抖音", "B站", "小红书"], key="diag_platform")
+            diag_platform = st.selectbox("目标平台", ["通用", "抖音", "B站", "小红书"], key="diag_platform")
         with d_col2:
-            diag_duration = st.slider("⏱️ 目标时长（秒）", 15, 300, 60, step=15, key="diag_duration")
-        diag_btn = st.form_submit_button("📊 开始诊断", type="primary", use_container_width=True)
+            diag_duration = st.slider("目标时长（秒）", 15, 300, 60, step=15, key="diag_duration")
+        diag_btn = st.form_submit_button("开始诊断", type="primary", use_container_width=True)
 
     if diag_btn:
         if not _premium_gate("脚本诊断"):
@@ -1575,9 +1575,9 @@ with tab8:
             st.session_state["_diag_platform"] = diag_platform
             with st.status("AI正在诊断脚本质量...", expanded=True) as d_status:
                 try:
-                    st.write("📐 分析脚本结构...")
-                    st.write("📈 评估完播率...")
-                    st.write("💬 预测互动效果...")
+                    st.write("分析脚本结构...")
+                    st.write("评估完播率...")
+                    st.write("预测互动效果...")
                     diag_result = content_analyzer.diagnose_script(
                         diag_script, diag_platform, diag_duration
                     )
@@ -1620,15 +1620,15 @@ with tab8:
 
         # 六维评分
         if d.get("scores"):
-            st.markdown("#### 📊 六维评分")
+            st.markdown("#### 六维评分")
             scores = d["scores"]
             score_names = {
-                "hook_power": "🎣 钩子强度",
-                "info_density": "📚 信息密度",
-                "pacing": "🎵 节奏起伏",
-                "emotion": "❤️ 情感感染",
-                "engagement": "💬 互动潜力",
-                "platform_fit": "📱 平台适配",
+                "hook_power": "钩子强度",
+                "info_density": "信息密度",
+                "pacing": "节奏起伏",
+                "emotion": "情感感染",
+                "engagement": "互动潜力",
+                "platform_fit": "平台适配",
             }
             s_cols = st.columns(3)
             for idx, (key, label) in enumerate(score_names.items()):
@@ -1648,34 +1648,34 @@ with tab8:
         # 完播率预测
         if d.get("completion_rate"):
             cr = d["completion_rate"]
-            st.markdown("#### 📈 完播率预测")
+            st.markdown("#### 完播率预测")
             st.metric("预测完播率", cr.get("predicted", "N/A"))
             if cr.get("dropoff_points"):
-                st.markdown("**⚠️ 可能流失点：**")
+                st.markdown("**可能流失点：**")
                 for dp in cr["dropoff_points"]:
                     st.warning(
-                        f"📍 **{dp.get('position', '')}** — {dp.get('reason', '')}\n\n"
-                        f"💡 建议：{dp.get('suggestion', '')}"
+                        f"**{dp.get('position', '')}** — {dp.get('reason', '')}\n\n"
+                        f"建议：{dp.get('suggestion', '')}"
                     )
 
         # 预测热门评论
         if d.get("predicted_comments"):
-            st.markdown("#### 💬 预测热门评论")
+            st.markdown("#### 预测热门评论")
             for pc in d["predicted_comments"]:
-                st.markdown(f"  💭 _{pc}_")
+                st.markdown(f"  _{pc}_")
 
         # 置顶评论建议
         if d.get("pin_comment_suggestion"):
-            st.markdown("#### 📌 建议置顶评论")
+            st.markdown("#### 建议置顶评论")
             st.success(d["pin_comment_suggestion"])
 
         # 具体优化建议
         if d.get("suggestions"):
-            st.markdown("#### ✏️ 具体优化建议")
+            st.markdown("#### 具体优化建议")
             for sg in d["suggestions"]:
                 priority = sg.get("priority", "medium")
-                p_icon = "🔴" if priority == "high" else "🟡" if priority == "medium" else "🟢"
-                with st.expander(f"{p_icon} {sg.get('area', '优化项')}", expanded=(priority == "high")):
+                p_label = "[高]" if priority == "high" else "[中]" if priority == "medium" else "[低]"
+                with st.expander(f"{p_label} {sg.get('area', '优化项')}", expanded=(priority == "high")):
                     if sg.get("current"):
                         st.markdown(f"**当前：** {sg['current']}")
                     if sg.get("problem"):
@@ -1689,7 +1689,7 @@ with tab8:
         _original_script = st.session_state.get("_diag_original_script", "")
         _diag_platform = st.session_state.get("_diag_platform", "通用")
         if _original_script and d.get("overall_score", 10) < 9:
-            if st.button("🔧 一键优化脚本（AI根据诊断结果重写）", type="primary", use_container_width=True, key="rewrite_btn"):
+            if st.button("一键优化脚本", type="primary", use_container_width=True, key="rewrite_btn"):
                 if not _premium_gate("一键重写"):
                     pass
                 else:
@@ -1705,17 +1705,17 @@ with tab8:
                         key_manager.consume_usage(st.session_state.get("card_key", ""))
 
             if "rewritten_script" in st.session_state and st.session_state["rewritten_script"]:
-                st.markdown("#### ✨ 优化后的脚本")
+                st.markdown("#### 优化后的脚本")
                 _rw_col1, _rw_col2 = st.columns(2)
                 with _rw_col1:
-                    st.markdown("**📄 原始脚本**")
+                    st.markdown("**原始脚本**")
                     st.text_area("原始", _original_script, height=300, disabled=True, key="_rw_orig", label_visibility="collapsed")
                 with _rw_col2:
-                    st.markdown("**✨ 优化后脚本**")
+                    st.markdown("**优化后脚本**")
                     st.text_area("优化后", st.session_state["rewritten_script"], height=300, disabled=True, key="_rw_new", label_visibility="collapsed")
 
                 st.download_button(
-                    "⬇️ 下载优化后脚本",
+                    "下载优化后脚本",
                     data=st.session_state["rewritten_script"],
                     file_name="优化后脚本.txt",
                     mime="text/plain",
