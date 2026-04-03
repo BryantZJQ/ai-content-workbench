@@ -1017,8 +1017,8 @@ with tab3:
 
 # ===== Tab4: 分镜生成 =====
 with tab4:
-    st.markdown("### AI视频分镜提示词")
-    st.caption("生成可直接复制到可灵/Pika/Runway使用的分镜提示词")
+    st.markdown("### AI分镜提示词")
+    st.caption("生成提示词，可直接复制到AI生图/生视频平台使用（含免费平台推荐）")
 
     _has_prev_script = "generated_script" in st.session_state and st.session_state["generated_script"]
 
@@ -1092,12 +1092,18 @@ with tab4:
                 col_cn, col_en = st.columns(2)
                 with col_cn:
                     if shot.get("prompt_cn"):
-                        st.markdown("**中文提示词（可灵/Vidu）**")
+                        st.markdown("**中文提示词**")
                         st.code(shot["prompt_cn"], language=None)
+                        st.button("复制中文提示词", key=f"copy_cn_{shot_num}", type="secondary",
+                                  on_click=lambda t=shot["prompt_cn"]: st.session_state.update({"_clipboard": t}),
+                                  help="点击后在下方文本框中复制")
                 with col_en:
                     if shot.get("prompt_en"):
-                        st.markdown("**英文提示词（Pika/Runway）**")
+                        st.markdown("**英文提示词**")
                         st.code(shot["prompt_en"], language=None)
+                        st.button("复制英文提示词", key=f"copy_en_{shot_num}", type="secondary",
+                                  on_click=lambda t=shot["prompt_en"]: st.session_state.update({"_clipboard": t}),
+                                  help="点击后在下方文本框中复制")
 
         # 分镜一键导出
         _export_lines = []
@@ -1120,26 +1126,73 @@ with tab4:
             use_container_width=True,
         )
 
-        # 使用指南
+        # 剪贴板辅助（点击复制按钮后显示可复制文本框）
+        if st.session_state.get("_clipboard"):
+            st.markdown("---")
+            st.text_area("已选中提示词（全选复制即可）", value=st.session_state["_clipboard"], height=80, key="_clipboard_area")
+            if st.button("清除", key="clear_clipboard"):
+                st.session_state.pop("_clipboard", None)
+                st.rerun()
+
+        # 使用指南（免费平台优先）
         st.markdown("---")
-        st.markdown("#### 下一步：用提示词生成AI视频")
+        st.markdown("#### 下一步：用提示词生成画面")
         st.markdown("""
-提示词已就绪！复制上方提示词，粘贴到以下任一AI视频工具即可生成画面：
+> 提示词可以用来**生成图片**（免费）或**生成视频**（付费），效果都很好。
+> 推荐先用免费AI图片工具生成配图，再用剪映合成视频，**零成本**出片。
+""")
 
-| 工具 | 语言 | 特点 | 链接 |
+        st.markdown("##### 免费AI图片生成（推荐）")
+        st.markdown("""
+| 平台 | 费用 | 特点 | 链接 |
 |------|------|------|------|
-| **可灵** | 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
-| **Vidu** | 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
-| **Pika** | 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
-| **Runway** | 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
-| **即梦** | 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
+| **通义万相** | 免费 | 阿里出品，中文提示词效果好 | [tongyi.aliyun.com/wanxiang](https://tongyi.aliyun.com/wanxiang) |
+| **文心一格** | 免费额度 | 百度出品，风格多样 | [yige.baidu.com](https://yige.baidu.com) |
+| **LiblibAI** | 免费额度 | 模型丰富，社区活跃 | [liblib.art](https://www.liblib.art) |
+| **FLUX** | 免费 | 开源模型，画质顶级 | [fal.ai/models/fal-ai/flux](https://fal.ai/models/fal-ai/flux) |
+""")
 
-**操作步骤：**
-1. 复制对应语言的提示词（中文→可灵/Vidu/即梦，英文→Pika/Runway）
-2. 打开工具网站，选择"文生视频"或"图生视频"
-3. 粘贴提示词，设置时长（建议4-6秒/镜头）
-4. 生成后下载，用剪映/CapCut拼接所有镜头 + 配音即完成
-        """)
+        st.markdown("##### 免费AI视频生成")
+        st.markdown("""
+| 平台 | 费用 | 特点 | 链接 |
+|------|------|------|------|
+| **海螺AI** | 每日免费 | MiniMax出品，质量接近可灵 | [hailuoai.video](https://hailuoai.video) |
+| **PixVerse** | 每日免费 | 速度快，免费额度充足 | [pixverse.ai](https://pixverse.ai) |
+| **即梦** | 每日免费积分 | 字节出品，签到送积分 | [jimeng.jianying.com](https://jimeng.jianying.com) |
+""")
+
+        st.markdown("##### 付费AI视频生成")
+        st.markdown("""
+| 平台 | 费用 | 特点 | 链接 |
+|------|------|------|------|
+| **可灵** | ¥2-5/条 | 效果最好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
+| **Pika** | $0.5-2/条 | 风格化强 | [pika.art](https://pika.art) |
+| **Runway** | $0.5-2/条 | Gen-3画质顶级 | [runwayml.com](https://runwayml.com) |
+""")
+
+        with st.expander("零成本出片操作流程（推荐）", expanded=False):
+            st.markdown("""
+**方式一：AI图片 + 剪映合成视频（最省钱）**
+1. 点击上方「复制中文提示词」
+2. 打开 [通义万相](https://tongyi.aliyun.com/wanxiang)，粘贴提示词生成图片
+3. 每个分镜生成1张图，全部下载到手机
+4. 打开**剪映** → 导入所有图片 → 每张图设置3-5秒
+5. 添加缩放/平移动画（让图片有"动"的感觉）
+6. 添加AI配音（剪映内置，免费）+ 字幕 + BGM
+7. 导出发布
+
+**方式二：免费AI视频平台**
+1. 点击上方「复制中文提示词」
+2. 打开 [海螺AI](https://hailuoai.video) 或 [PixVerse](https://pixverse.ai)
+3. 粘贴提示词，生成4-6秒视频片段
+4. 每个分镜生成1段，全部下载
+5. 用**剪映**拼接所有片段 + 配音 + 字幕
+6. 导出发布
+
+> 抖音/小红书大量爆款就是图片+动画+配音，不需要真正的AI视频。
+""")
+
+        _render_share_banner("分镜提示词")
 
 
 # ===== Tab5: 一键出片 =====
@@ -1391,26 +1444,17 @@ with tab5:
                 key="op_dl_full",
             )
 
-        # 使用指南
+        # 使用指南（免费平台优先）
         st.markdown("---")
-        st.markdown("#### 下一步：用提示词生成AI视频")
+        st.markdown("#### 下一步：用提示词生成画面")
+        st.info("复制上方分镜的中文提示词，粘贴到免费AI图片/视频平台即可生成画面。详细平台列表和零成本出片流程请切换到「分镜提示词」Tab查看。")
+
         st.markdown("""
-提示词已就绪！复制上方提示词，粘贴到以下任一AI视频工具即可生成画面：
-
-| 工具 | 语言 | 特点 | 链接 |
-|------|------|------|------|
-| **可灵** | 中文 | 国产首选，效果好 | [klingai.kuaishou.com](https://klingai.kuaishou.com) |
-| **Vidu** | 中文 | 生数科技出品，速度快 | [vidu.studio](https://www.vidu.studio) |
-| **Pika** | 英文 | 风格化强，适合创意 | [pika.art](https://pika.art) |
-| **Runway** | 英文 | Gen-3 Alpha，画质顶级 | [runwayml.com](https://runwayml.com) |
-| **即梦** | 中文 | 字节出品，免费额度多 | [jimeng.jianying.com](https://jimeng.jianying.com) |
-
-**操作步骤：**
-1. 复制对应语言的提示词（中文→可灵/Vidu/即梦，英文→Pika/Runway）
-2. 打开工具网站，选择"文生视频"或"图生视频"
-3. 粘贴提示词，设置时长（建议4-6秒/镜头）
-4. 生成后下载，用剪映/CapCut拼接所有镜头 + 配音即完成
-        """)
+**快速推荐：**
+- **免费生图** → [通义万相](https://tongyi.aliyun.com/wanxiang)（粘贴提示词 → 生成图片 → 剪映合成视频）
+- **免费生视频** → [海螺AI](https://hailuoai.video) / [PixVerse](https://pixverse.ai)
+- **付费生视频** → [可灵](https://klingai.kuaishou.com) / [即梦](https://jimeng.jianying.com)
+""")
 
         _render_share_banner("一键出片")
 
