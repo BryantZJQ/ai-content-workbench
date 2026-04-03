@@ -35,11 +35,17 @@ st.markdown("""
     /* ========== 全局基础 ========== */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    .stApp, .stApp * {
+    .stApp {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
                      'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif !important;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+    /* 继承字体到子元素，但排除图标字体 */
+    .stApp p, .stApp span, .stApp div, .stApp label, .stApp input, .stApp textarea,
+    .stApp button, .stApp select, .stApp h1, .stApp h2, .stApp h3, .stApp h4,
+    .stApp li, .stApp td, .stApp th, .stApp a, .stApp code, .stApp pre {
+        font-family: inherit !important;
     }
 
     /* ========== 主标题区 ========== */
