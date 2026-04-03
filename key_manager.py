@@ -204,10 +204,14 @@ def _load_cloud_keys() -> dict:
         if hasattr(st, "secrets") and "keys" in st.secrets:
             cloud = {}
             for key_code, info in st.secrets["keys"].items():
+                plan = info.get("plan", "monthly")
+                plan_cfg = KEY_PLANS.get(plan, {})
                 cloud[key_code] = {
-                    "plan": info.get("plan", "monthly"),
-                    "plan_name": KEY_PLANS.get(info.get("plan", "monthly"), {}).get("name", ""),
-                    "daily_limit": KEY_PLANS.get(info.get("plan", "monthly"), {}).get("daily_limit", 50),
+                    "plan": plan,
+                    "plan_name": plan_cfg.get("name", ""),
+                    "daily_limit": plan_cfg.get("daily_limit", 50),
+                    "total_limit": plan_cfg.get("total_limit", 0),
+                    "total_used": 0,
                     "created_at": info.get("created_at", datetime.now().isoformat()),
                     "activated_at": info.get("activated_at"),
                     "expires_at": info.get("expires_at"),
