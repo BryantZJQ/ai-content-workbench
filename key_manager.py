@@ -105,6 +105,14 @@ def validate_key(key_code: str) -> dict:
     today = datetime.now().strftime("%Y-%m-%d")
     now = datetime.now()
 
+    # 检查是否被禁用（本地 status 或云端数据库 status）
+    if key_info.get("status") == "disabled":
+        return {"valid": False, "message": "该卡密已被禁用，如有疑问请联系客服"}
+    if cloud_db.is_available():
+        cloud_record = cloud_db.get_usage(key_code)
+        if cloud_record and cloud_record.get("status") == "disabled":
+            return {"valid": False, "message": "该卡密已被禁用，如有疑问请联系客服"}
+
     # 首次使用：激活
     if key_info["status"] == "unused":
         plan = key_info["plan"]
