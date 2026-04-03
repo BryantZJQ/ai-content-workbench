@@ -22,6 +22,7 @@ if api_key:
 
 import topic_engine
 import script_gen
+import key_manager
 
 
 # ============================================================
@@ -92,33 +93,99 @@ st.markdown("""
 # ============================================================
 # 侧边栏
 # ============================================================
+def _check_premium() -> bool:
+    """检查是否有权使用付费功能"""
+    v = st.session_state.get("key_validation")
+    return v is not None and v.get("valid", False)
+
+
+def _premium_gate(feature_name: str) -> bool:
+    """付费功能门控，无权限时显示提示并返回False"""
+    if _check_premium():
+        return True
+    st.warning(f"🔒 **{feature_name}** 为付费功能，请在左侧边栏输入卡密解锁")
+    st.markdown("""
+    **获取卡密：**
+    - 体验卡（3天免费）：关注公众号回复「体验」获取
+    - 周卡 ¥9.9 / 月卡 ¥29 / 年卡 ¥199
+    - 联系微信：`your_wechat_id`
+    """)
+    return False
+
+
 with st.sidebar:
     st.markdown("## ⚙️ 设置")
 
-    input_key = st.text_input(
-        "DeepSeek API Key",
-        value=st.session_state.get("api_key", ""),
-        type="password",
-        placeholder="sk-xxxxxxxx",
-        help="在 platform.deepseek.com 注册获取，费用极低",
+    # === 卡密验证 ===
+    st.markdown("### 🔑 卡密")
+    input_card_key = st.text_input(
+        "输入卡密",
+        value=st.session_state.get("card_key", ""),
+        placeholder="ACP-XXXX-XXXX-XXXX",
+        help="输入卡密解锁全部功能",
     )
-    if input_key != st.session_state.get("api_key", ""):
-        st.session_state["api_key"] = input_key
-        os.environ["DEEPSEEK_API_KEY"] = input_key
 
-    if st.session_state.get("api_key"):
-        st.success("✅ API Key 已设置")
+    if input_card_key:
+        if input_card_key != st.session_state.get("card_key", ""):
+            st.session_state["card_key"] = input_card_key
+            result = key_manager.validate_key(input_card_key)
+            st.session_state["key_validation"] = result
+
+        v = st.session_state.get("key_validation", {})
+        if v.get("valid"):
+            st.success(f"✅ {v.get('plan_name', '')} | 今日剩余 {v.get('remaining_today', 0)} 次")
+            if v.get("expires_at"):
+                st.caption(f"到期时间：{v['expires_at']}")
+        else:
+            st.error(v.get("message", "卡密无效"))
     else:
-        st.warning("⚠️ 请先输入API Key才能使用脚本生成等功能")
+        st.info("🔓 输入卡密解锁脚本生成等付费功能")
+        st.session_state["key_validation"] = None
+
+    st.divider()
+
+    # === API Key（对用户隐藏，内置默认值）===
+    default_api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+    # 尝试从 secrets 读取
+    try:
+        if hasattr(st, "secrets") and "DEEPSEEK_API_KEY" in st.secrets:
+            default_api_key = st.secrets["DEEPSEEK_API_KEY"]
+    except Exception:
+        pass
+
+    with st.expander("⚙️ 高级设置", expanded=False):
+        input_key = st.text_input(
+            "DeepSeek API Key（可选，已内置）",
+            value=st.session_state.get("api_key", default_api_key),
+            type="password",
+            placeholder="留空则使用内置Key",
+        )
+        if input_key:
+            st.session_state["api_key"] = input_key
+            os.environ["DEEPSEEK_API_KEY"] = input_key
+
+    # 确保环境变量有值
+    if not os.environ.get("DEEPSEEK_API_KEY") and default_api_key:
+        os.environ["DEEPSEEK_API_KEY"] = default_api_key
+    if st.session_state.get("api_key") and not os.environ.get("DEEPSEEK_API_KEY"):
+        os.environ["DEEPSEEK_API_KEY"] = st.session_state["api_key"]
 
     st.divider()
 
     st.markdown("### 📊 功能说明")
     st.markdown("""
-    - **🔥 热搜榜单** — 不需要API Key
-    - **🎯 智能选题** — 需要API Key
-    - **📝 脚本生成** — 需要API Key
-    - **🎬 分镜提示词** — 需要API Key
+    - **🔥 热搜榜单** — 免费使用
+    - **🎯 智能选题** — 需要卡密
+    - **📝 脚本生成** — 需要卡密
+    - **🎬 分镜提示词** — 需要卡密
+    """)
+
+    st.divider()
+
+    st.markdown("""    
+    **获取卡密：**  
+    关注公众号回复「体验」获取3天体验卡  
+    或联系微信购买：`your_wechat_id`
     """)
 
     st.divider()
@@ -217,8 +284,8 @@ with tab2:
         topic_btn = st.button("🎯 开始选题", type="primary", use_container_width=True)
 
     if topic_btn:
-        if not st.session_state.get("api_key"):
-            st.error("请先在左侧边栏输入 DeepSeek API Key")
+        if not _premium_gate("智能选题"):
+            pass
         else:
             seed_list = [k.strip() for k in seeds.split(",") if k.strip()] if seeds else None
             with st.spinner("AI正在分析选题... 需要30-60秒"):
@@ -230,6 +297,7 @@ with tab2:
                         use_hot=use_hot,
                     )
                     st.session_state["scored_topics"] = results
+                    key_manager.consume_usage(st.session_state.get("card_key", ""))
                 except Exception as e:
                     st.error(f"选题失败: {e}")
 
@@ -307,8 +375,8 @@ with tab3:
                 st.rerun()
 
     if script_btn:
-        if not st.session_state.get("api_key"):
-            st.error("请先在左侧边栏输入 DeepSeek API Key")
+        if not _premium_gate("脚本生成"):
+            pass
         elif not script_topic:
             st.error("请输入选题")
         else:
@@ -321,6 +389,7 @@ with tab3:
                         platform=script_platform,
                     )
                     st.session_state["generated_script"] = result
+                    key_manager.consume_usage(st.session_state.get("card_key", ""))
                 except Exception as e:
                     st.error(f"生成失败: {e}")
 
@@ -382,8 +451,8 @@ with tab4:
     vc_btn = st.button("🎬 生成分镜", type="primary", use_container_width=True)
 
     if vc_btn:
-        if not st.session_state.get("api_key"):
-            st.error("请先在左侧边栏输入 DeepSeek API Key")
+        if not _premium_gate("分镜生成"):
+            pass
         elif not vc_script:
             st.error("请先生成或输入脚本内容")
         else:
@@ -396,6 +465,7 @@ with tab4:
                         platform=vc_platform,
                     )
                     st.session_state["visual_cues"] = cues
+                    key_manager.consume_usage(st.session_state.get("card_key", ""))
                 except Exception as e:
                     st.error(f"生成失败: {e}")
 
